@@ -1,0 +1,161 @@
+name: Daily Translation Report
+
+on:
+  schedule:
+    # 08:00 UTC = 09:00 CET (Madrid winter) / 10:00 CEST (Madrid summer)
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+    inputs:
+      days_back:
+        description: 'Days back to fetch log (1 = yesterday)'
+        required: false
+        default: '1'
+
+env:
+  PROGRAM_ID: '47754'
+  ENVIRONMENT_ID: '237306'
+  IMS_ORG_ID: '114744A66135CF9B0A495FEB@AdobeOrg'
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r scripts/requirements.txt
+
+      - name: Determine target date
+        id: date
+        run: |
+          DAYS_BACK="${{ github.event.inputs.days_back || '1' }}"
+          TARGET_DATE=$(date -d "-${DAYS_BACK} days" '+%Y-%m-%d' 2>/dev/null || date -v-${DAYS_BACK}d '+%Y-%m-%d')
+          echo "target_date=${TARGET_DATE}" >> "$GITHUB_OUTPUT"
+          echo "Target date: ${TARGET_DATE}"
+
+      - name: Get IMS access token
+        id: auth
+        run: |
+          RESPONSE=$(curl -s -X POST 'https://ims-na1.adobelogin.com/ims/token/v3' \
+            -H 'Content-Type: application/x-www-form-urlencoded' \
+            -d "client_id=${{ secrets.ADOBE_CLIENT_ID }}" \
+            -d "client_secret=${{ secrets.ADOBE_CLIENT_SECRET }}" \
+            -d 'grant_type=client_credentials' \
+            -d 'scope=AdobeID,openid,read_organizations,ent_cloudmgr_sdk')
+
+          TOKEN=$(echo "$RESPONSE" | python3 -c "import sys,json; print(json.load(sys.stdin).get('access_token',''))")
+
+          if [ -z "$TOKEN" ] || [ "$TOKEN" = "" ]; then
+            echo "Failed to obtain IMS token"
+            echo "$RESPONSE" | python3 -c "import sys,json; print(json.dumps(json.load(sys.stdin), indent=2))"
+            exit 1
+          fi
+
+          echo "::add-mask::$TOKEN"
+          echo "token=${TOKEN}" >> "$GITHUB_OUTPUT"
+          echo "IMS token obtained successfully"
+
+      - name: Fetch log download URL from Cloud Manager
+        id: logs
+        run: |
+          DAYS_BACK="${{ github.event.inputs.days_back || '1' }}"
+
+          RESPONSE=$(curl -s -X GET \
+            "https://cloudmanager.adobe.io/api/program/${{ env.PROGRAM_ID }}/environment/${{ env.ENVIRONMENT_ID }}/logs?service=author&name=aemerror&days=${DAYS_BACK}" \
+            -H "Authorization: Bearer ${{ steps.auth.outputs.token }}" \
+            -H "x-gw-ims-org-id: ${{ env.IMS_ORG_ID }}" \
+            -H "x-api-key: ${{ secrets.ADOBE_CLIENT_ID }}" \
+            -H "Content-Type: application/json")
+
+          echo "$RESPONSE" | python3 -c "
+          import sys, json
+          data = json.load(sys.stdin)
+          if 'error_code' in data:
+              print(f'API Error: {data}')
+              sys.exit(1)
+          links = data.get('_embedded', {}).get('downloads', [])
+          if not links:
+              print('No log download links found')
+              sys.exit(1)
+          for link in links:
+              print(f'Log: {link.get(\"date\",\"\")} - {link.get(\"service\",\"\")}')
+          # Get the redirect URLs
+          urls = []
+          for link in links:
+              href = link.get('_links', {}).get('http://ns.adobe.com/adobecloud/rel/logs/download', {}).get('href', '')
+              if href:
+                  urls.append(href)
+          with open('download_urls.txt', 'w') as f:
+              f.write('\n'.join(urls))
+          print(f'Found {len(urls)} log file(s) to download')
+          "
+
+      - name: Download and decompress log files
+        run: |
+          TARGET_DATE="${{ steps.date.outputs.target_date }}"
+          LOG_FILE="author_aemerror_${TARGET_DATE}.log"
+
+          while IFS= read -r URL; do
+            if [ -n "$URL" ]; then
+              echo "Downloading from Cloud Manager..."
+              curl -s -L "$URL" \
+                -H "Authorization: Bearer ${{ steps.auth.outputs.token }}" \
+                -H "x-gw-ims-org-id: ${{ env.IMS_ORG_ID }}" \
+                -H "x-api-key: ${{ secrets.ADOBE_CLIENT_ID }}" \
+                -o "log_part.gz"
+
+              if file log_part.gz | grep -q gzip; then
+                gunzip -c log_part.gz >> "$LOG_FILE"
+              else
+                cat log_part.gz >> "$LOG_FILE"
+              fi
+              rm -f log_part.gz
+            fi
+          done < download_urls.txt
+
+          if [ ! -f "$LOG_FILE" ] || [ ! -s "$LOG_FILE" ]; then
+            echo "Error: Log file is empty or missing"
+            exit 1
+          fi
+
+          FILE_SIZE=$(du -h "$LOG_FILE" | cut -f1)
+          echo "Log file: $LOG_FILE ($FILE_SIZE)"
+
+      - name: Run analysis
+        run: |
+          TARGET_DATE="${{ steps.date.outputs.target_date }}"
+          LOG_FILE="author_aemerror_${TARGET_DATE}.log"
+
+          python scripts/analyze_translation_log.py "$LOG_FILE" \
+            --reports-dir reports \
+            --date "$TARGET_DATE"
+
+      - name: Commit and push reports
+        run: |
+          TARGET_DATE="${{ steps.date.outputs.target_date }}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add reports/
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update translation report with ${TARGET_DATE} data"
+            git push
+            echo "Reports committed and pushed"
+          fi
+
+      - name: Cleanup
+        if: always()
+        run: |
+          rm -f author_aemerror_*.log download_urls.txt log_part.gz
