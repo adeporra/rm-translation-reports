@@ -25,11 +25,19 @@ Every morning at 09:00 CET, a GitHub Actions workflow:
 
 ### Prerequisites
 
-1. **Adobe Developer Console** — OAuth Server-to-Server credential with **Cloud Manager API** access
-2. **Adobe Admin Console** — The technical account must be added to one of these Cloud Manager product profiles:
-   - Business Owner
-   - Deployment Manager
-   - Developer
+1. **Adobe Developer Console** — OAuth Server-to-Server credential with the **Cloud Manager API** added
+2. **Adobe Admin Console** — The credential's technical account must be assigned to a Cloud Manager product profile
+
+#### Granting Cloud Manager API access
+
+The credential currently returns `403025 Profile is not valid` when calling the Cloud Manager API. To fix:
+
+1. Go to [Adobe Developer Console](https://developer.adobe.com/console/) → select the project containing your credential
+2. Click **Add API** → select **Cloud Manager** → choose the OAuth Server-to-Server credential
+3. Go to [Adobe Admin Console](https://adminconsole.adobe.com/) → **Products** → **Cloud Manager**
+4. Select a product profile (e.g., **Developer** or **Deployment Manager**)
+5. Click **API credentials** tab → add the credential's technical account email
+6. Verify by running the workflow manually from the Actions tab
 
 ### Configure GitHub Secrets
 
