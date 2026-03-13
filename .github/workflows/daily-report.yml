@@ -159,3 +159,25 @@ jobs:
         if: always()
         run: |
           rm -f author_aemerror_*.log download_urls.txt log_part.gz
+
+  deploy:
+    needs: analyze
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Prepare for GitHub Pages
+        run: |
+          cp reports/translation_jobs_all_days.html reports/index.html
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./reports

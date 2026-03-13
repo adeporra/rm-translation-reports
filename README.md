@@ -2,6 +2,13 @@
 
 Automated daily analysis of AEM Cloud Service PROD author `aemerror` logs for translation job performance monitoring.
 
+## View reports
+
+| Where | Link |
+|-------|------|
+| **Dashboard (browser)** | [adeporra.github.io/rm-translation-reports](https://adeporra.github.io/rm-translation-reports) |
+| **Summary (GitHub)** | [reports/SUMMARY.md](reports/SUMMARY.md) |
+
 ## What it does
 
 Every morning at 09:00 CET, a GitHub Actions workflow:
@@ -9,15 +16,17 @@ Every morning at 09:00 CET, a GitHub Actions workflow:
 1. Authenticates to Adobe IMS using OAuth Server-to-Server credentials
 2. Downloads the previous day's `aemerror` log from Cloud Manager API
 3. Parses translation pipeline events, errors, retries, and RMTranslationRequest activity
-4. Updates consolidated reports (CSV, HTML, XLSX) with the new day's data
+4. Updates consolidated reports (CSV, HTML, XLSX, SUMMARY.md) with the new day's data
 5. Commits the updated reports back to this repository
+6. Deploys the reports to GitHub Pages for browser viewing
 
 ## Reports
 
 | File | Description |
 |------|-------------|
+| `reports/SUMMARY.md` | Quick view — KPIs, per-day table, retry highlights (renders on GitHub) |
+| `reports/translation_jobs_all_days.html` | Dashboard — dark-themed HTML with full styling (served via GitHub Pages) |
 | `reports/translation_jobs_all_days.csv` | Raw data — all translation jobs with timestamps, durations, retry info |
-| `reports/translation_jobs_all_days.html` | Dashboard — dark-themed HTML with KPIs, error summaries, per-day breakdowns |
 | `reports/translation_jobs_all_days.xlsx` | Spreadsheet — multi-sheet workbook (Jobs, Summary, Errors, RMTranslationRequest) |
 | `reports/metadata.json` | Internal — error counts and token summaries per date |
 
@@ -47,6 +56,15 @@ Go to **Settings → Secrets and variables → Actions** and add:
 |--------|-------|
 | `ADOBE_CLIENT_ID` | OAuth client ID from Adobe Developer Console |
 | `ADOBE_CLIENT_SECRET` | OAuth client secret |
+
+### Enable GitHub Pages
+
+To view the HTML dashboard in a browser:
+
+1. Go to **Settings → Pages**
+2. Under **Build and deployment**, set **Source** to **GitHub Actions**
+3. The workflow deploys reports automatically after each run
+4. Your dashboard will be at `https://<username>.github.io/rm-translation-reports/`
 
 ### Manual Run
 

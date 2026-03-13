@@ -726,6 +726,110 @@ def generate_html(all_rows, errors_by_date, rm_tokens_by_date, html_path):
     with open(html_path, 'w', encoding='utf-8') as f:
         f.write(html)
 
+
+def generate_summary_md(all_rows, errors_by_date, rm_tokens_by_date, md_path, pages_url=None):
+    """Generate Markdown summary for GitHub repo view."""
+    dates = sorted(set(r['Date'] for r in all_rows))
+    total_jobs = len(all_rows)
+    approved = sum(1 for r in all_rows if r['Status'] == 'APPROVED')
+    errored = sum(1 for r in all_rows if r['Status'] == 'ERROR')
+    stuck = sum(1 for r in all_rows if r['Status'] in ('IN_PROGRESS', 'READY_FOR_REVIEW'))
+    unknown = sum(1 for r in all_rows if r['Status'] == 'UNKNOWN')
+    retried = sum(1 for r in all_rows if r.get('Retries') and int(r.get('Retries', '0') or '0') > 0)
+
+    durations = []
+    for r in all_rows:
+        v = r.get('Total Duration (ms)', '')
+        if v:
+            try:
+                durations.append(int(v))
+            except ValueError:
+                pass
+    avg_dur = ms_to_human(sum(durations) / len(durations)) if durations else '-'
+    min_dur = ms_to_human(min(durations)) if durations else '-'
+    max_dur = ms_to_human(max(durations)) if durations else '-'
+
+    pages_url = pages_url or 'https://adeporra.github.io/rm-translation-reports/'
+    pages_link = f'[**View full dashboard →**]({pages_url})' if pages_url else ''
+
+    lines = [
+        '# Translation Jobs Report — PROD Author',
+        '',
+        f'*{len(dates)} day(s): {", ".join(dates)}*',
+        '',
+        pages_link,
+        '',
+        '## Summary',
+        '',
+        '| Metric | Value |',
+        '|--------|-------|',
+        f'| **Total Jobs** | {total_jobs} |',
+        f'| **Approved** | {approved} |',
+        f'| **Errors** | {errored} |',
+        f'| **Stuck** | {stuck} |',
+        f'| **Unknown** | {unknown} |',
+        f'| **Retried & Recovered** | {retried} |',
+        f'| **Avg Duration** | {avg_dur} |',
+        f'| **Min / Max** | {min_dur} / {max_dur} |',
+        '',
+        '## Per-day breakdown',
+        '',
+        '| Date | Jobs | Approved | Errors | Stuck | Unknown | Retried |',
+        '|------|------|---------|--------|-------|--------|---------|',
+    ]
+
+    for d in dates:
+        day_rows = [r for r in all_rows if r['Date'] == d]
+        lines.append(
+            f"| {d} | {len(day_rows)} | "
+            f"{sum(1 for r in day_rows if r['Status'] == 'APPROVED')} | "
+            f"{sum(1 for r in day_rows if r['Status'] == 'ERROR')} | "
+            f"{sum(1 for r in day_rows if r['Status'] in ('IN_PROGRESS', 'READY_FOR_REVIEW'))} | "
+            f"{sum(1 for r in day_rows if r['Status'] == 'UNKNOWN')} | "
+            f"{sum(1 for r in day_rows if r.get('Retries') and int(r.get('Retries', '0') or '0') > 0)} |"
+        )
+
+    retry_rows = [r for r in all_rows if r.get('Retries') and int(r.get('Retries', '0') or '0') > 0]
+    if retry_rows:
+        lines.extend([
+            '',
+            '## Retry detection',
+            '',
+            '| Date | # | Job ID | Project | Language | Detail | Status |',
+            '|------|---|--------|---------|----------|--------|--------|',
+        ])
+        for r in retry_rows:
+            detail = (r.get('Retry Detail') or '').replace('|', '\\|')
+            lines.append(f"| {r['Date']} | {r['#']} | `{r['Job ID']}` | {r['Project']} | {r['Language']} | {detail} | {r['Status']} |")
+
+    lines.extend([
+        '',
+        '## Top error categories',
+        '',
+    ])
+    all_cats = OrderedDict()
+    for d in dates:
+        for cat, cnt in errors_by_date.get(d, {}).items():
+            all_cats[cat] = all_cats.get(cat, 0) + cnt
+    top_errors = sorted(all_cats.items(), key=lambda x: -x[1])[:10]
+    if top_errors:
+        lines.append('| Category | Total |')
+        lines.append('|----------|-------|')
+        for cat, cnt in top_errors:
+            lines.append(f'| {cat} | {cnt:,} |')
+    else:
+        lines.append('*No errors recorded*')
+
+    lines.extend([
+        '',
+        f'*Generated {datetime.now().strftime("%Y-%m-%d %H:%M")}*',
+        '',
+    ])
+
+    with open(md_path, 'w', encoding='utf-8') as f:
+        f.write('\n'.join(lines))
+
+
 # ---------------------------------------------------------------------------
 # XLSX report
 # ---------------------------------------------------------------------------
@@ -983,11 +1087,16 @@ def main():
     rm_tokens_by_date = meta['tokens']
 
     # Step 8: Generate reports
+    summary_path = os.path.join(reports_dir, 'SUMMARY.md')
+
     print(f'  Generating CSV ({len(all_rows)} rows)...')
     save_csv(all_rows, csv_path)
 
     print('  Generating HTML...')
     generate_html(all_rows, errors_by_date, rm_tokens_by_date, html_path)
+
+    print('  Generating SUMMARY.md...')
+    generate_summary_md(all_rows, errors_by_date, rm_tokens_by_date, summary_path)
 
     print('  Generating XLSX...')
     generate_xlsx(all_rows, errors_by_date, rm_tokens_by_date, xlsx_path)
@@ -995,6 +1104,7 @@ def main():
     print(f'\nDone! Reports saved to {reports_dir}/')
     print(f'  - {os.path.basename(csv_path)}')
     print(f'  - {os.path.basename(html_path)}')
+    print(f'  - {os.path.basename(summary_path)}')
     print(f'  - {os.path.basename(xlsx_path)}')
 
     # Summary
