@@ -162,6 +162,7 @@ jobs:
 
   deploy:
     needs: analyze
+    if: always()
     runs-on: ubuntu-latest
     permissions:
       contents: write
