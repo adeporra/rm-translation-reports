@@ -15,6 +15,7 @@ env:
   PROGRAM_ID: '47754'
   ENVIRONMENT_ID: '237306'
   IMS_ORG_ID: '114744A66135CF9B0A495FEB@AdobeOrg'
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
 
 jobs:
   analyze:
@@ -80,7 +81,12 @@ jobs:
           import sys, json
           data = json.load(sys.stdin)
           if 'error_code' in data:
-              print(f'API Error: {data}')
+              err = data.get('error_code', '')
+              msg = data.get('message', '')
+              print(f'::error::Cloud Manager API failed: {err} - {msg}')
+              if err == '403025':
+                  print('::error::Fix: Add the credential technical account to a Cloud Manager product profile in Adobe Admin Console. See README.')
+              print(json.dumps(data, indent=2))
               sys.exit(1)
           links = data.get('_embedded', {}).get('downloads', [])
           if not links:
