@@ -8,13 +8,13 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Jobs** | 374 |
-| **Approved** | 344 |
+| **Total Jobs** | 395 |
+| **Approved** | 366 |
 | **Errors** | 0 |
-| **Stuck** | 8 |
-| **Unknown** | 22 |
-| **Retried & Recovered** | 3 |
-| **Avg Duration** | 12.5s |
+| **Stuck** | 9 |
+| **Unknown** | 20 |
+| **Retried & Recovered** | 7 |
+| **Avg Duration** | 11.4s |
 | **Min / Max** | 0.1s / 2m 27.3s |
 
 ## Per-day breakdown
@@ -25,29 +25,33 @@
 | 2026-03-05 | 61 | 57 | 0 | 0 | 4 | 0 |
 | 2026-03-06 | 98 | 89 | 0 | 3 | 6 | 0 |
 | 2026-03-11 | 110 | 106 | 0 | 1 | 3 | 1 |
-| 2026-03-12 | 71 | 62 | 0 | 3 | 6 | 2 |
+| 2026-03-12 | 92 | 84 | 0 | 4 | 4 | 6 |
 
 ## Retry detection
 
 | Date | # | Job ID | Project | Language | Detail | Status |
 |------|---|--------|---------|----------|--------|--------|
 | 2026-03-11 | 47 | `translationjob54` | Ignacio -  Ai Translation Project | JA-JP | API call failed (payload dumped) → retried → APPROVED | APPROVED |
-| 2026-03-12 | 5 | `translationjob102` | Ignacio Ai Translation Project | JA-JP | API call failed (token_request_error) → retried → APPROVED | APPROVED |
-| 2026-03-12 | 11 | `translationjob108` | Ignacio Ai Translation Project | JA-JP | API call failed (token_request_error) → retried → APPROVED | APPROVED |
+| 2026-03-12 | 28 | `translationjob12` | Alejandro Ai Translation Project | PT-PT | API call failed (token_request_error) | IN_PROGRESS |
+| 2026-03-12 | 30 | `translationjob14` | Alejandro Ai Translation Project | AR-AE | API call failed (token_request_error) → retried → APPROVED | APPROVED |
+| 2026-03-12 | 31 | `translationjob15` | Alejandro Ai Translation Project | FR-FR | API call failed (token_request_error) → retried → APPROVED | APPROVED |
+| 2026-03-12 | 32 | `translationjob16` | Alejandro Ai Translation Project | JA-JP | API call failed (token_request_error) | IN_PROGRESS |
+| 2026-03-12 | 46 | `translationjob24` | Alejandro Ai Translation Project | JA-JP | API call failed (token_request_error) | IN_PROGRESS |
+| 2026-03-12 | 48 | `translationjob26` | Alejandro Ai Translation Project | JA-JP | API call failed (token_request_error) | IN_PROGRESS |
 
 ## Top error categories
 
 | Category | Total |
 |----------|-------|
-| Language copy not found | 156,920 |
-| ReplicationSquadListener | 71,216 |
-| ResourceUtils commit | 6,164 |
-| LockUtil contention | 781 |
-| TranslateHrefAttributes | 684 |
-| ThumbnailServlet | 307 |
-| Error executing workflow | 205 |
-| Content LC unknown state | 169 |
-| ReplicationNewsAssemblyListener | 149 |
-| TicketAssemblyTranslationServiceImpl | 15 |
+| ReplicationSquadListener | 45,485 |
+| ResourceUtils commit | 3,900 |
+| LockUtil contention | 808 |
+| Language copy not found | 662 |
+| TranslateHrefAttributes | 578 |
+| TranslationCleanupJobConsumer | 558 |
+| ReplicationNewsAssemblyListener | 227 |
+| ThumbnailServlet | 32 |
+| GCCScriptProcessor | 15 |
+| Error executing workflow | 10 |
 
-*Generated 2026-03-13 17:56*
+*Generated 2026-03-13 19:23*
