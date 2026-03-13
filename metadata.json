@@ -1,0 +1,37 @@
+{
+  "errors": {
+    "2026-03-12": {
+      "Language copy not found": 156920,
+      "Content LC unknown state": 169,
+      "Failed to start translation": 2,
+      "Error processing Translation project": 13,
+      "TranslationCleanupJobConsumer": 8,
+      "ThumbnailServlet": 307,
+      "TicketAssemblyTranslationServiceImpl": 15,
+      "GCCScriptProcessor": 11,
+      "ReplicationSquadListener": 71216,
+      "ReplicationNewsAssemblyListener": 149,
+      "ResourceUtils commit": 6164,
+      "LockUtil contention": 781,
+      "TranslateHrefAttributes": 684,
+      "Error executing workflow": 205
+    }
+  },
+  "tokens": {
+    "2026-03-12": {
+      "total": 423,
+      "init": 139,
+      "obtained": 140,
+      "expires": 140,
+      "errors": 2,
+      "token_size": 0
+    }
+  },
+  "noise": {
+    "2026-03-12": {
+      "PublishLiveSummaryTranslateStep": 66507,
+      "El idioma del CF no es en-us": 85310,
+      "ReplicationCamerasListener": 66514
+    }
+  }
+}
