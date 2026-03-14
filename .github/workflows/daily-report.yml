@@ -2,8 +2,8 @@ name: Daily Translation Report
 
 on:
   schedule:
-    # 08:00 UTC = 09:00 CET (Madrid winter) / 10:00 CEST (Madrid summer)
-    - cron: '0 8 * * *'
+    # 04:00 UTC = 05:00 CET (Madrid winter) / 06:00 CEST (Madrid summer)
+    - cron: '0 4 * * *'
   workflow_dispatch:
     inputs:
       days_back:
@@ -34,6 +34,20 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r scripts/requirements.txt
+
+      - name: Archive and reset on Sunday
+        run: |
+          if [ "$(date +%u)" = "7" ]; then
+            ARCHIVE_DIR="reports/archive/weekly_$(date +%Y-%m-%d)"
+            mkdir -p "$ARCHIVE_DIR"
+            [ -f reports/translation_jobs_all_days.csv ] && cp reports/translation_jobs_all_days.csv "$ARCHIVE_DIR/"
+            [ -f reports/translation_jobs_all_days.html ] && cp reports/translation_jobs_all_days.html "$ARCHIVE_DIR/"
+            [ -f reports/translation_jobs_all_days.xlsx ] && cp reports/translation_jobs_all_days.xlsx "$ARCHIVE_DIR/"
+            [ -f reports/metadata.json ] && cp reports/metadata.json "$ARCHIVE_DIR/"
+            [ -f reports/SUMMARY.md ] && cp reports/SUMMARY.md "$ARCHIVE_DIR/"
+            rm -f reports/translation_jobs_all_days.csv reports/metadata.json
+            echo "Archived to $ARCHIVE_DIR and reset for new week"
+          fi
 
       - name: Determine target date
         id: date

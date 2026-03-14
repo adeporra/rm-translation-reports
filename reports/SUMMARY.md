@@ -1,6 +1,6 @@
 # Translation Jobs Report — PROD Author
 
-*6 day(s): 2026-03-04, 2026-03-05, 2026-03-06, 2026-03-11, 2026-03-12, 2026-03-13*
+*3 day(s): 2026-03-11, 2026-03-12, 2026-03-13*
 
 [**View full dashboard →**](https://adeporra.github.io/rm-translation-reports/)
 
@@ -8,22 +8,19 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Jobs** | 436 |
-| **Approved** | 407 |
+| **Total Jobs** | 243 |
+| **Approved** | 231 |
 | **Errors** | 0 |
-| **Stuck** | 9 |
-| **Unknown** | 20 |
+| **Stuck** | 5 |
+| **Unknown** | 7 |
 | **Retried & Recovered** | 7 |
-| **Avg Duration** | 10.6s |
-| **Min / Max** | 0.1s / 2m 27.3s |
+| **Avg Duration** | 9.0s |
+| **Min / Max** | 0.1s / 1m 22.9s |
 
 ## Per-day breakdown
 
 | Date | Jobs | Approved | Errors | Stuck | Unknown | Retried |
 |------|------|---------|--------|-------|--------|---------|
-| 2026-03-04 | 34 | 30 | 0 | 1 | 3 | 0 |
-| 2026-03-05 | 61 | 57 | 0 | 0 | 4 | 0 |
-| 2026-03-06 | 98 | 89 | 0 | 3 | 6 | 0 |
 | 2026-03-11 | 110 | 106 | 0 | 1 | 3 | 1 |
 | 2026-03-12 | 92 | 84 | 0 | 4 | 4 | 6 |
 | 2026-03-13 | 41 | 41 | 0 | 0 | 0 | 0 |
@@ -55,4 +52,4 @@
 | GCCScriptProcessor | 40 |
 | TicketAssemblyTranslationServiceImpl | 13 |
 
-*Generated 2026-03-14 18:22*
+*Generated 2026-03-14 19:34*

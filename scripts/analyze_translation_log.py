@@ -81,6 +81,8 @@ NOISE_PATTERNS = [
     'ReplicationCamerasListener',
 ]
 
+MIN_DATE = '2026-03-11'  # Rows before this date are excluded from reports
+
 # ---------------------------------------------------------------------------
 # Utility helpers
 # ---------------------------------------------------------------------------
@@ -535,6 +537,10 @@ tr:last-child td{border-bottom:none}.m{font-family:'JetBrains Mono','Fira Code',
 .notice{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:20px}
 .notice h4{margin-bottom:6px}
 .footer{color:var(--muted);text-align:center;font-size:11px;margin-top:24px}
+.day-header{cursor:pointer;user-select:none;background:var(--surface2)!important}
+.day-header:hover{background:var(--border)!important}
+.day-header .toggle{display:inline-block;width:14px;margin-right:6px;font-size:10px}
+.day-row.collapsed{display:none}
 """
 
 DATE_COLORS = [
@@ -669,8 +675,8 @@ def generate_html(all_rows, errors_by_date, rm_tokens_by_date, html_path):
                 html += f' + 0 chatRequestPromptJson (DEBUG level needed)'
             html += '</p></div>\n'
 
-    # Full job table
-    html += '<h2>All Translation Jobs</h2>\n<div class="tw"><table>\n<thead><tr>'
+    # Full job table with expand/collapse per day
+    html += '<h2>All Translation Jobs</h2>\n<p style="color:var(--muted);font-size:12px;margin-bottom:8px">Click a date row to expand or collapse</p>\n<div class="tw"><table>\n<thead><tr>'
     display_cols = ['Date', '#', 'Job ID', 'Project', 'Language', 'Status',
                     'Created', 'InProgress', 'ReadyForReview', 'Approved/Error',
                     'Content Gathering', 'Created→InProg', 'InProg→Ready',
@@ -679,46 +685,66 @@ def generate_html(all_rows, errors_by_date, rm_tokens_by_date, html_path):
         html += f'<th>{c}</th>'
     html += '</tr></thead>\n<tbody>\n'
 
-    for r in all_rows:
-        row_class = ''
-        if r.get('Retries') and int(r.get('Retries', '0') or '0') > 0:
-            row_class = ' class="row-retry"'
-        elif r['Status'] == 'ERROR':
-            row_class = ' class="row-err"'
-        elif r['Status'] in ('IN_PROGRESS', 'READY_FOR_REVIEW'):
-            row_class = ' class="row-warn"'
-        elif r['Status'] == 'UNKNOWN':
-            row_class = ' class="row-unk"'
+    for d in dates:
+        day_rows = [r for r in all_rows if r['Date'] == d]
+        col, bg = date_color_map[d]
+        html += f'<tr class="day-header" data-date="{d}" data-expanded="true">'
+        html += f'<td colspan="17"><span class="toggle">▼</span> <span class="db" style="background:{bg};color:{col}">{d}</span> — {len(day_rows)} jobs</td></tr>\n'
 
-        col, bg = date_color_map.get(r['Date'], DATE_COLORS[0])
-        st_cls = status_class(r['Status'])
+        for r in day_rows:
+            row_class = 'day-row'
+            if r.get('Retries') and int(r.get('Retries', '0') or '0') > 0:
+                row_class += ' row-retry'
+            elif r['Status'] == 'ERROR':
+                row_class += ' row-err'
+            elif r['Status'] in ('IN_PROGRESS', 'READY_FOR_REVIEW'):
+                row_class += ' row-warn'
+            elif r['Status'] == 'UNKNOWN':
+                row_class += ' row-unk'
 
-        html += f'<tr{row_class}>'
-        html += f'<td><span class="db" style="background:{bg};color:{col}">{format_date_display(r["Date"])}</span></td>'
-        html += f'<td class="m">{r["#"]}</td>'
-        html += f'<td class="m">{r["Job ID"]}</td>'
-        html += f'<td>{r["Project"]}</td>'
-        html += f'<td class="m">{r["Language"]}</td>'
-        html += f'<td><span class="{st_cls}">{r["Status"]}</span></td>'
-        html += f'<td class="m">{r["Created"]}</td>'
-        html += f'<td class="m">{r["InProgress"]}</td>'
-        html += f'<td class="m">{r["ReadyForReview"]}</td>'
-        html += f'<td class="m">{r["Approved/Error"]}</td>'
-        html += f'<td class="m tr">{r.get("Content Gathering","")}</td>'
-        html += f'<td class="m tr">{r.get("Created→InProg","")}</td>'
-        html += f'<td class="m tr">{r.get("InProg→Ready","")}</td>'
-        html += f'<td class="m tr">{r.get("Ready→Approved","")}</td>'
-        html += f'<td class="m tr">{r.get("Total Duration","")}</td>'
-        html += f'<td class="m" style="font-size:9px">{r.get("Content Objects","")}</td>'
+            col, bg = date_color_map.get(r['Date'], DATE_COLORS[0])
+            st_cls = status_class(r['Status'])
 
-        retries_val = r.get('Retries', '')
-        if retries_val and int(retries_val or '0') > 0:
-            html += f'<td><span class="retry-badge">{retries_val}</span></td>'
-        else:
-            html += '<td></td>'
-        html += '</tr>\n'
+            html += f'<tr class="{row_class}" data-date="{d}">'
+            html += f'<td><span class="db" style="background:{bg};color:{col}">{format_date_display(r["Date"])}</span></td>'
+            html += f'<td class="m">{r["#"]}</td>'
+            html += f'<td class="m">{r["Job ID"]}</td>'
+            html += f'<td>{r["Project"]}</td>'
+            html += f'<td class="m">{r["Language"]}</td>'
+            html += f'<td><span class="{st_cls}">{r["Status"]}</span></td>'
+            html += f'<td class="m">{r["Created"]}</td>'
+            html += f'<td class="m">{r["InProgress"]}</td>'
+            html += f'<td class="m">{r["ReadyForReview"]}</td>'
+            html += f'<td class="m">{r["Approved/Error"]}</td>'
+            html += f'<td class="m tr">{r.get("Content Gathering","")}</td>'
+            html += f'<td class="m tr">{r.get("Created→InProg","")}</td>'
+            html += f'<td class="m tr">{r.get("InProg→Ready","")}</td>'
+            html += f'<td class="m tr">{r.get("Ready→Approved","")}</td>'
+            html += f'<td class="m tr">{r.get("Total Duration","")}</td>'
+            html += f'<td class="m" style="font-size:9px">{r.get("Content Objects","")}</td>'
+
+            retries_val = r.get('Retries', '')
+            if retries_val and int(retries_val or '0') > 0:
+                html += f'<td><span class="retry-badge">{retries_val}</span></td>'
+            else:
+                html += '<td></td>'
+            html += '</tr>\n'
 
     html += '</tbody></table></div>\n'
+    html += '''<script>
+    document.querySelectorAll('.day-header').forEach(function(h) {
+      h.addEventListener('click', function() {
+        var d = this.getAttribute('data-date');
+        var expanded = this.getAttribute('data-expanded') === 'true';
+        var rows = document.querySelectorAll('.day-row[data-date="' + d + '"]');
+        var toggle = this.querySelector('.toggle');
+        rows.forEach(function(r) { r.classList.toggle('collapsed', expanded); });
+        toggle.textContent = expanded ? '▶' : '▼';
+        this.setAttribute('data-expanded', !expanded);
+      });
+    });
+    </script>
+'''
 
     html += f'<div class="footer">Generated {datetime.now().strftime("%Y-%m-%d %H:%M:%S")} by AEM Translation Log Analyzer</div>\n'
     html += '</div></body></html>'
@@ -998,15 +1024,61 @@ def save_metadata(meta, meta_path):
         json.dump(meta, f, indent=2)
 
 # ---------------------------------------------------------------------------
+# Filter-only mode (regenerate from existing CSV with MIN_DATE filter)
+# ---------------------------------------------------------------------------
+
+def run_filter_only(reports_dir):
+    """Filter existing CSV by MIN_DATE and regenerate HTML, XLSX, SUMMARY."""
+    reports_dir = os.path.abspath(reports_dir)
+    csv_path = os.path.join(reports_dir, 'translation_jobs_all_days.csv')
+    meta_path = os.path.join(reports_dir, 'metadata.json')
+
+    existing_rows = load_existing_csv(csv_path)
+    all_rows = [r for r in existing_rows if r.get('Date', '') >= MIN_DATE]
+    if not all_rows:
+        print('No rows after filter. Nothing to do.')
+        return
+
+    meta = load_metadata(meta_path)
+    meta['errors'] = {d: v for d, v in meta['errors'].items() if d >= MIN_DATE}
+    meta['tokens'] = {d: v for d, v in meta['tokens'].items() if d >= MIN_DATE}
+    meta['noise'] = {d: v for d, v in meta['noise'].items() if d >= MIN_DATE}
+    save_metadata(meta, meta_path)
+
+    errors_by_date = {d: OrderedDict(v) for d, v in meta['errors'].items()}
+    rm_tokens_by_date = meta['tokens']
+
+    html_path = os.path.join(reports_dir, 'translation_jobs_all_days.html')
+    xlsx_path = os.path.join(reports_dir, 'translation_jobs_all_days.xlsx')
+    summary_path = os.path.join(reports_dir, 'SUMMARY.md')
+
+    save_csv(all_rows, csv_path)
+    generate_html(all_rows, errors_by_date, rm_tokens_by_date, html_path)
+    generate_summary_md(all_rows, errors_by_date, rm_tokens_by_date, summary_path)
+    generate_xlsx(all_rows, errors_by_date, rm_tokens_by_date, xlsx_path)
+
+    print(f'Filtered to {len(all_rows)} rows (>= {MIN_DATE})')
+    print(f'Reports regenerated: {html_path}, {xlsx_path}, {summary_path}')
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
 def main():
     parser = argparse.ArgumentParser(description='AEM Translation Log Analyzer')
-    parser.add_argument('logfile', help='Path to aemerror log file')
+    parser.add_argument('logfile', nargs='?', help='Path to aemerror log file (omit for --filter-only)')
     parser.add_argument('--reports-dir', default='reports', help='Output directory for reports')
     parser.add_argument('--date', help='Override date (YYYY-MM-DD), otherwise detected from filename')
+    parser.add_argument('--filter-only', action='store_true', help='Filter existing CSV by MIN_DATE and regenerate reports (no log needed)')
     args = parser.parse_args()
+
+    if args.filter_only:
+        run_filter_only(args.reports_dir)
+        return
+
+    if not args.logfile:
+        parser.error('logfile is required unless --filter-only')
 
     logfile = os.path.abspath(args.logfile)
     reports_dir = os.path.abspath(args.reports_dir)
@@ -1063,8 +1135,9 @@ def main():
     meta_path = os.path.join(reports_dir, 'metadata.json')
 
     existing_rows = load_existing_csv(csv_path)
+    existing_rows = [r for r in existing_rows if r.get('Date', '') >= MIN_DATE]
     filtered_rows = [r for r in existing_rows if r.get('Date') != date_str]
-    print(f'  Existing data: {len(existing_rows)} rows ({len(existing_rows) - len(filtered_rows)} for {date_str} will be replaced)')
+    print(f'  Existing data: {len(existing_rows)} rows (>= {MIN_DATE}, {len(existing_rows) - len(filtered_rows)} for {date_str} will be replaced)')
 
     new_rows = jobs_to_rows(jobs, date_str)
     all_rows = filtered_rows + new_rows
@@ -1081,6 +1154,9 @@ def main():
     meta['errors'][date_str] = dict(error_counts)
     meta['tokens'][date_str] = rm_tokens
     meta['noise'][date_str] = dict(noise_counts)
+    meta['errors'] = {d: v for d, v in meta['errors'].items() if d >= MIN_DATE}
+    meta['tokens'] = {d: v for d, v in meta['tokens'].items() if d >= MIN_DATE}
+    meta['noise'] = {d: v for d, v in meta['noise'].items() if d >= MIN_DATE}
     save_metadata(meta, meta_path)
 
     errors_by_date = {d: OrderedDict(v) for d, v in meta['errors'].items()}
