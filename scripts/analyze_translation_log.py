@@ -601,7 +601,7 @@ def generate_html(all_rows, errors_by_date, rm_tokens_by_date, html_path):
 <style>{HTML_CSS}</style></head><body><div class="ctr">
 
 <h1>Translation Jobs Report &mdash; PROD Author ({len(dates)} Day{"s" if len(dates)!=1 else ""})</h1>
-<p class="sub">Logs: {date_badges} &nbsp;|&nbsp; <span class="retry-badge">RETRY TRACKING</span></p>
+<p class="sub">Logs: {date_badges} &nbsp;|&nbsp; <span class="retry-badge">RETRY TRACKING</span> &nbsp;|&nbsp; <a href="publish/" style="color:var(--accent)">Publish Errors</a></p>
 
 <div class="sr">
 <div class="sc"><div class="sl">Total Jobs</div><div class="sv a">{total_jobs}</div></div>

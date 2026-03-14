@@ -6,19 +6,27 @@ Automated daily analysis of AEM Cloud Service PROD author `aemerror` logs for tr
 
 | Where | Link |
 |-------|------|
-| **Dashboard (browser)** | [adeporra.github.io/rm-translation-reports](https://adeporra.github.io/rm-translation-reports) |
+| **Translation dashboard** | [adeporra.github.io/rm-translation-reports](https://adeporra.github.io/rm-translation-reports) |
+| **Publish error report** | [adeporra.github.io/rm-translation-reports/publish](https://adeporra.github.io/rm-translation-reports/publish) |
 | **Summary (GitHub)** | [reports/SUMMARY.md](reports/SUMMARY.md) |
 
 ## What it does
 
-Every morning at 09:00 CET, a GitHub Actions workflow:
+Every morning at 05:00 Madrid time, two GitHub Actions workflows run:
 
+**Daily Translation Report** (author):
 1. Authenticates to Adobe IMS using OAuth Server-to-Server credentials
-2. Downloads the previous day's `aemerror` log from Cloud Manager API
+2. Downloads the previous day's `aemerror` log from Cloud Manager API (author service)
 3. Parses translation pipeline events, errors, retries, and RMTranslationRequest activity
 4. Updates consolidated reports (CSV, HTML, XLSX, SUMMARY.md) with the new day's data
 5. Commits the updated reports back to this repository
-6. Deploys the reports to GitHub Pages for browser viewing
+6. Deploys to GitHub Pages
+
+**Daily Publish Error Report** (publish):
+1. Uses the same credentials to fetch `aemerror` from the **publish** service
+2. Performs general error validation (ERROR and WARN levels)
+3. Generates HTML, Markdown, and XLSX reports in `reports/publish/`
+4. Commits and deploys to GitHub Pages at `/publish`
 
 ## Reports
 
@@ -29,6 +37,9 @@ Every morning at 09:00 CET, a GitHub Actions workflow:
 | `reports/translation_jobs_all_days.csv` | Raw data — all translation jobs with timestamps, durations, retry info |
 | `reports/translation_jobs_all_days.xlsx` | Spreadsheet — multi-sheet workbook (Jobs, Summary, Errors, RMTranslationRequest) |
 | `reports/metadata.json` | Internal — error counts and token summaries per date |
+| `reports/publish/index.html` | Publish error dashboard (ERROR/WARN by class) |
+| `reports/publish/SUMMARY.md` | Publish error summary (Markdown) |
+| `reports/publish/errors.xlsx` | Publish errors spreadsheet |
 
 ## Setup
 

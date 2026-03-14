@@ -1,0 +1,201 @@
+name: Daily Publish Error Report
+
+on:
+  schedule:
+    - cron: '0 4 * * *'
+  workflow_dispatch:
+    inputs:
+      days_back:
+        description: 'Days back to fetch log (1 = yesterday)'
+        required: false
+        default: '1'
+
+env:
+  PROGRAM_ID: '47754'
+  ENVIRONMENT_ID: '237306'
+  IMS_ORG_ID: '114744A66135CF9B0A495FEB@AdobeOrg'
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      target_date: ${{ steps.date.outputs.target_date }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r scripts/requirements.txt
+
+      - name: Determine target date
+        id: date
+        run: |
+          DAYS_BACK="${{ github.event.inputs.days_back || '1' }}"
+          TARGET_DATE=$(date -d "-${DAYS_BACK} days" '+%Y-%m-%d' 2>/dev/null || date -v-${DAYS_BACK}d '+%Y-%m-%d')
+          echo "target_date=${TARGET_DATE}" >> "$GITHUB_OUTPUT"
+          echo "Target date: ${TARGET_DATE}"
+
+      - name: Get IMS access token
+        id: auth
+        run: |
+          RESPONSE=$(curl -s -X POST 'https://ims-na1.adobelogin.com/ims/token/v3' \
+            -H 'Content-Type: application/x-www-form-urlencoded' \
+            -d "client_id=${{ secrets.ADOBE_CLIENT_ID }}" \
+            -d "client_secret=${{ secrets.ADOBE_CLIENT_SECRET }}" \
+            -d 'grant_type=client_credentials' \
+            -d 'scope=openid,AdobeID,read_organizations,additional_info.projectedProductContext,read_pc.dma_aem_ams')
+
+          TOKEN=$(echo "$RESPONSE" | python3 -c "import sys,json; print(json.load(sys.stdin).get('access_token',''))")
+
+          if [ -z "$TOKEN" ] || [ "$TOKEN" = "" ]; then
+            echo "Failed to obtain IMS token"
+            echo "$RESPONSE" | python3 -c "import sys,json; print(json.dumps(json.load(sys.stdin), indent=2))"
+            exit 1
+          fi
+
+          echo "::add-mask::$TOKEN"
+          echo "token=${TOKEN}" >> "$GITHUB_OUTPUT"
+          echo "IMS token obtained successfully"
+
+      - name: Fetch publish log download URL from Cloud Manager
+        id: logs
+        run: |
+          DAYS_BACK="${{ github.event.inputs.days_back || '1' }}"
+
+          RESPONSE=$(curl -s -X GET \
+            "https://cloudmanager.adobe.io/api/program/${{ env.PROGRAM_ID }}/environment/${{ env.ENVIRONMENT_ID }}/logs?service=publish&name=aemerror&days=${DAYS_BACK}" \
+            -H "Authorization: Bearer ${{ steps.auth.outputs.token }}" \
+            -H "x-gw-ims-org-id: ${{ env.IMS_ORG_ID }}" \
+            -H "x-api-key: ${{ secrets.ADOBE_CLIENT_ID }}" \
+            -H "Content-Type: application/json")
+
+          echo "$RESPONSE" | python3 -c "
+          import sys, json
+          BASE = 'https://cloudmanager.adobe.io'
+          data = json.load(sys.stdin)
+          if 'error_code' in data:
+              err = data.get('error_code', '')
+              msg = data.get('message', '')
+              print(f'::error::Cloud Manager API failed: {err} - {msg}')
+              if err == '403025':
+                  print('::error::Fix: Add the credential to a Cloud Manager product profile in Adobe Admin Console.')
+              print(json.dumps(data, indent=2))
+              sys.exit(1)
+          links = data.get('_embedded', {}).get('downloads', [])
+          if not links:
+              print('No log download links found')
+              sys.exit(1)
+          urls = []
+          for link in links:
+              href = link.get('_links', {}).get('http://ns.adobe.com/adobecloud/rel/logs/download', {}).get('href', '')
+              if href:
+                  if href.startswith('/'):
+                      href = BASE + href
+                  urls.append(href)
+          with open('download_urls.txt', 'w') as f:
+              f.write('\n'.join(urls))
+          print(f'Found {len(urls)} log file(s) to download')
+          "
+
+      - name: Download and decompress log files
+        run: |
+          set -e
+          TARGET_DATE="${{ steps.date.outputs.target_date }}"
+          LOG_FILE="publish_aemerror_${TARGET_DATE}.log"
+          rm -f "$LOG_FILE"
+
+          DOWNLOADED=0
+          while IFS= read -r URL; do
+            [ -z "$URL" ] && continue
+            echo "Downloading publish log from Cloud Manager..."
+            if curl -s -L "$URL" \
+              -H "Authorization: Bearer ${{ steps.auth.outputs.token }}" \
+              -H "x-gw-ims-org-id: ${{ env.IMS_ORG_ID }}" \
+              -H "x-api-key: ${{ secrets.ADOBE_CLIENT_ID }}" \
+              -o "log_part.gz"; then
+              if file log_part.gz 2>/dev/null | grep -q gzip; then
+                gunzip -c log_part.gz >> "$LOG_FILE"
+              else
+                cat log_part.gz >> "$LOG_FILE"
+              fi
+              DOWNLOADED=1
+            else
+              echo "::warning::Download failed for URL (exit $?)"
+            fi
+            rm -f log_part.gz
+          done < download_urls.txt
+
+          if [ ! -f "$LOG_FILE" ] || [ ! -s "$LOG_FILE" ]; then
+            echo "::error::Log file is empty or missing. Check download URLs."
+            exit 1
+          fi
+
+          FILE_SIZE=$(du -h "$LOG_FILE" | cut -f1)
+          echo "Log file: $LOG_FILE ($FILE_SIZE)"
+
+      - name: Run publish error analysis
+        run: |
+          TARGET_DATE="${{ steps.date.outputs.target_date }}"
+          LOG_FILE="publish_aemerror_${TARGET_DATE}.log"
+
+          mkdir -p reports/publish
+          python scripts/analyze_publish_errors.py "$LOG_FILE" \
+            --reports-dir reports/publish
+
+      - name: Commit and push reports
+        run: |
+          TARGET_DATE="${{ steps.date.outputs.target_date }}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add reports/publish/
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update publish error report with ${TARGET_DATE} data"
+            git push
+            echo "Publish reports committed and pushed"
+          fi
+
+      - name: Cleanup
+        if: always()
+        run: |
+          rm -f publish_aemerror_*.log download_urls.txt log_part.gz
+
+  deploy:
+    needs: analyze
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Prepare GitHub Pages (author + publish)
+        run: |
+          mkdir -p reports
+          cp reports/translation_jobs_all_days.html reports/index.html 2>/dev/null || true
+          mkdir -p reports/publish
+          if [ -f reports/publish/index.html ]; then
+            echo "Publish report ready at /publish/"
+          fi
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./reports
