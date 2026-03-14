@@ -62,9 +62,10 @@ Go to **Settings → Secrets and variables → Actions** and add:
 To view the HTML dashboard in a browser:
 
 1. Go to **Settings → Pages**
-2. Under **Build and deployment**, set **Source** to **GitHub Actions**
-3. The workflow deploys reports automatically after each run
-4. Your dashboard will be at `https://<username>.github.io/rm-translation-reports/`
+2. Under **Build and deployment**, set **Source** to **Deploy from a branch**
+3. **Branch**: select `gh-pages` and `/ (root)`
+4. Save — the workflow deploys to `gh-pages` after each run
+5. Your dashboard will be at `https://<username>.github.io/rm-translation-reports/`
 
 ### Manual Run
 
