@@ -8,13 +8,13 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Jobs** | 243 |
-| **Approved** | 231 |
+| **Total Jobs** | 249 |
+| **Approved** | 237 |
 | **Errors** | 0 |
 | **Stuck** | 5 |
 | **Unknown** | 7 |
 | **Retried & Recovered** | 7 |
-| **Avg Duration** | 9.0s |
+| **Avg Duration** | 8.9s |
 | **Min / Max** | 0.1s / 1m 22.9s |
 
 ## Per-day breakdown
@@ -23,7 +23,7 @@
 |------|------|---------|--------|-------|--------|---------|
 | 2026-03-11 | 110 | 106 | 0 | 1 | 3 | 1 |
 | 2026-03-12 | 92 | 84 | 0 | 4 | 4 | 6 |
-| 2026-03-13 | 41 | 41 | 0 | 0 | 0 | 0 |
+| 2026-03-13 | 47 | 47 | 0 | 0 | 0 | 0 |
 
 ## Retry detection
 
@@ -41,15 +41,15 @@
 
 | Category | Total |
 |----------|-------|
-| ReplicationSquadListener | 90,174 |
-| ReplicationNewsAssemblyListener | 22,559 |
+| ReplicationSquadListener | 90,258 |
+| ReplicationNewsAssemblyListener | 22,635 |
 | ResourceUtils commit | 7,546 |
-| LockUtil contention | 1,116 |
-| TranslateHrefAttributes | 754 |
-| Language copy not found | 727 |
+| LockUtil contention | 1,158 |
+| TranslateHrefAttributes | 766 |
+| Language copy not found | 733 |
 | TranslationCleanupJobConsumer | 566 |
 | ThumbnailServlet | 72 |
 | GCCScriptProcessor | 40 |
 | TicketAssemblyTranslationServiceImpl | 13 |
 
-*Generated 2026-03-14 19:34*
+*Generated 2026-03-14 18:40*
