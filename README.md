@@ -57,6 +57,21 @@ Go to **Settings → Secrets and variables → Actions** and add:
 | `ADOBE_CLIENT_ID` | OAuth client ID from Adobe Developer Console |
 | `ADOBE_CLIENT_SECRET` | OAuth client secret |
 
+### (Optional) Email report
+
+To receive the HTML report by email after each run, add these secrets:
+
+| Secret | Value |
+|--------|-------|
+| `MAIL_TO` | Your email address |
+| `MAIL_FROM` | Sender (e.g. `Translation Reports <noreply@example.com>`) |
+| `MAIL_SMTP_HOST` | SMTP server (e.g. `smtp.gmail.com`, `smtp.office365.com`) |
+| `MAIL_SMTP_PORT` | Port (e.g. `587` for STARTTLS, `465` for SSL) |
+| `MAIL_SMTP_USER` | SMTP username |
+| `MAIL_SMTP_PASS` | SMTP password (use an app password for Gmail) |
+
+If `MAIL_TO` is not set, the email step is skipped.
+
 ### Enable GitHub Pages
 
 To view the HTML dashboard in a browser:

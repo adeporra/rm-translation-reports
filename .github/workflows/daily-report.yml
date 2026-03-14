@@ -22,6 +22,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    outputs:
+      target_date: ${{ steps.date.outputs.target_date }}
 
     steps:
       - name: Checkout repository
@@ -210,3 +212,17 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./reports
+
+      - name: Send report by email
+        if: ${{ secrets.MAIL_TO != '' }}
+        uses: dawidd6/action-send-mail@v5
+        with:
+          server_address: ${{ secrets.MAIL_SMTP_HOST }}
+          server_port: ${{ secrets.MAIL_SMTP_PORT }}
+          username: ${{ secrets.MAIL_SMTP_USER }}
+          password: ${{ secrets.MAIL_SMTP_PASS }}
+          subject: "Translation Report — PROD (${{ needs.analyze.outputs.target_date || 'latest' }})"
+          from: ${{ secrets.MAIL_FROM }}
+          to: ${{ secrets.MAIL_TO }}
+          html_body: file://reports/translation_jobs_all_days.html
+          content_type: text/html
