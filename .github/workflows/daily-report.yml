@@ -214,7 +214,7 @@ jobs:
           publish_dir: ./reports
 
       - name: Send report by email
-        if: ${{ secrets.MAIL_TO != '' }}
+        if: vars.MAIL_ENABLED == 'true'
         uses: dawidd6/action-send-mail@v5
         with:
           server_address: ${{ secrets.MAIL_SMTP_HOST }}

@@ -70,7 +70,12 @@ Go to **Settings → Secrets and variables → Actions** and add:
 
 ### (Optional) Email report
 
-To receive the HTML report by email after each run, add these secrets:
+To receive the HTML report by email after each run:
+
+1. Add a **variable** in **Settings → Secrets and variables → Actions → Variables**:
+   - Name: `MAIL_ENABLED`, Value: `true`
+
+2. Add these **secrets** in **Settings → Secrets and variables → Actions → Secrets**:
 
 | Secret | Value |
 |--------|-------|
@@ -81,7 +86,7 @@ To receive the HTML report by email after each run, add these secrets:
 | `MAIL_SMTP_USER` | SMTP username |
 | `MAIL_SMTP_PASS` | SMTP password (use an app password for Gmail) |
 
-If `MAIL_TO` is not set, the email step is skipped.
+If `MAIL_ENABLED` is not set or not `true`, the email step is skipped.
 
 ### Enable GitHub Pages
 
