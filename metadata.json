@@ -11,10 +11,28 @@
       "ResourceUtils commit": 1450,
       "TranslateHrefAttributes": 2,
       "Error executing workflow": 9
+    },
+    "2026-03-15": {
+      "TranslationCleanupJobConsumer": 4,
+      "ThumbnailServlet": 20,
+      "TicketAssemblyTranslationServiceImpl": 3,
+      "GCCScriptProcessor": 4,
+      "ReplicationSquadListener": 12973,
+      "ReplicationNewsAssemblyListener": 12974,
+      "ResourceUtils commit": 1170,
+      "TranslateHrefAttributes": 4
     }
   },
   "tokens": {
     "2026-03-14": {
+      "total": 0,
+      "init": 0,
+      "obtained": 0,
+      "expires": 0,
+      "errors": 0,
+      "token_size": 0
+    },
+    "2026-03-15": {
       "total": 0,
       "init": 0,
       "obtained": 0,
@@ -28,6 +46,11 @@
       "PublishLiveSummaryTranslateStep": 2,
       "El idioma del CF no es en-us": 25131,
       "ReplicationCamerasListener": 25437
+    },
+    "2026-03-15": {
+      "PublishLiveSummaryTranslateStep": 12111,
+      "El idioma del CF no es en-us": 20761,
+      "ReplicationCamerasListener": 12108
     }
   }
 }
