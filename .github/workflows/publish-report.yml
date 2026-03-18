@@ -149,7 +149,8 @@ jobs:
 
           mkdir -p reports/publish
           python scripts/analyze_publish_errors.py "$LOG_FILE" \
-            --reports-dir reports/publish
+            --reports-dir reports/publish \
+            --date "$TARGET_DATE"
 
       - name: Commit and push reports
         run: |
@@ -191,7 +192,7 @@ jobs:
           cp reports/translation_jobs_all_days.html reports/index.html 2>/dev/null || true
           mkdir -p reports/publish
           if [ -f reports/publish/index.html ]; then
-            echo "Publish report ready at /publish/"
+            echo "Publish reports ready at /publish/ (hub) and /publish/YYYY-MM-DD/"
           fi
 
       - name: Deploy to GitHub Pages

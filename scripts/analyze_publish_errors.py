@@ -51,22 +51,22 @@ def parse_errors(logfile):
                 warns.append({'date': m.group(1), 'time': m.group(2), 'level': 'WARN', 'class': m.group(6), 'msg': m.group(7)[:200]})
     return errs, warns
 
-def generate_html(errs, warns, by_class, out_path):
-    html = '''<!DOCTYPE html>
-<html><head><meta charset="utf-8"><title>Publish Error Report</title>
+def generate_html(errs, warns, by_class, out_path, report_date):
+    html = f'''<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Publish Error Report — {report_date}</title>
 <style>
-body{font-family:system-ui,sans-serif;margin:2rem;background:#1a1a2e;color:#eee;}
-h1,h2{color:#e94560;}
-table{border-collapse:collapse;width:100%;margin:1rem 0;}
-th,td{border:1px solid #444;padding:8px;text-align:left;}
-th{background:#16213e;color:#e94560;}
-tr:nth-child(even){background:#16213e;}
-.error{color:#e94560;}
-.warn{color:#f0ad4e;}
-a{color:#4fc3f7;}
+body{{font-family:system-ui,sans-serif;margin:2rem;background:#1a1a2e;color:#eee;}}
+h1,h2{{color:#e94560;}}
+table{{border-collapse:collapse;width:100%;margin:1rem 0;}}
+th,td{{border:1px solid #444;padding:8px;text-align:left;}}
+th{{background:#16213e;color:#e94560;}}
+tr:nth-child(even){{background:#16213e;}}
+.error{{color:#e94560;}}
+.warn{{color:#f0ad4e;}}
+a{{color:#4fc3f7;}}
 </style></head><body>
-<h1>AEM PROD Publish Error Report</h1>
-<p>Generated from aemerror.log — general error validation. <a href="../">← Translation Report</a></p>
+<h1>AEM PROD Publish Error Report — {report_date}</h1>
+<p>Report date: {report_date} | Generated from aemerror.log — general error validation. <a href="../../">← Translation Report</a> | <a href="../">← All reports</a></p>
 <h2>Summary</h2>
 <table><tr><th>Level</th><th>Count</th></tr>
 <tr><td class="error">ERROR</td><td>''' + str(len(errs)) + '''</td></tr>
@@ -86,13 +86,14 @@ a{color:#4fc3f7;}
 <table><tr><th>Date</th><th>Time</th><th>Class</th><th>Message</th></tr>'''
     for r in warns[:100]:
         html += f'<tr><td>{r["date"]}</td><td>{r["time"]}</td><td>{r["class"]}</td><td>{r["msg"][:150]}</td></tr>'
-    html += '</table></body></html>'
+    html += f'<p style="color:#888;font-size:12px;margin-top:2rem">Generated {datetime.now().strftime("%Y-%m-%d %H:%M")}</p>'
+    html += '</body></html>'
     with open(out_path, 'w') as f:
         f.write(html)
 
-def generate_md(errs, warns, by_class, out_path):
-    lines = ['# AEM PROD Publish Error Report\n', 'Generated from aemerror.log — general error validation.\n',
-              '## Summary\n', f'- **ERROR**: {len(errs)}', f'- **WARN**: {len(warns)}\n',
+def generate_md(errs, warns, by_class, out_path, report_date):
+    lines = [f'# AEM PROD Publish Error Report — {report_date}\n', f'Report date: {report_date}\n', 'Generated from aemerror.log — general error validation.\n',
+              '## Summary\n', f'- **ERROR**: {len(errs)}\n', f'- **WARN**: {len(warns)}\n',
               '## By Class\n', '| Class | ERROR | WARN |\n|-------|-------|------|\n']
     for cls, counts in sorted(by_class.items(), key=lambda x: -(x[1].get('ERROR', 0) + x[1].get('WARN', 0))):
         lines.append(f'| {cls} | {counts.get("ERROR",0)} | {counts.get("WARN",0)} |\n')
@@ -128,25 +129,67 @@ def generate_xlsx(errs, warns, by_class, out_path):
         ws4.append([r['date'], r['time'], r['class'], r['msg']])
     wb.save(out_path)
 
+def parse_date_from_filename(filename):
+    """Extract YYYY-MM-DD from filenames like publish_aemerror_2026-03-20.log"""
+    m = re.search(r'(\d{4}-\d{2}-\d{2})', os.path.basename(filename))
+    return m.group(1) if m else None
+
+
+def generate_index_html(available_dates, out_path):
+    """Generate hub index listing all available report dates."""
+    dates = sorted(available_dates, reverse=True)
+    html = '''<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Publish Error Reports</title>
+<style>body{font-family:system-ui,sans-serif;margin:2rem;background:#1a1a2e;color:#eee;}
+h1{color:#e94560;}a{color:#4fc3f7;}ul{list-style:none;padding:0;}
+li{margin:8px 0;padding:8px;background:#16213e;border-radius:6px;width:fit-content;}
+</style></head><body>
+<h1>AEM PROD Publish Error Reports</h1>
+<p><a href="../">← Translation Report</a></p>
+<h2>Available reports</h2>
+<ul>
+'''
+    for d in dates:
+        html += f'<li><a href="{d}/">{d}</a></li>\n'
+    html += '''</ul>
+</body></html>'''
+    with open(out_path, 'w') as f:
+        f.write(html)
+
+
 def main():
     parser = argparse.ArgumentParser(description='Analyze AEM publish aemerror log')
     parser.add_argument('logfile', help='Path to aemerror log')
     parser.add_argument('--reports-dir', default='reports/publish', help='Output directory')
+    parser.add_argument('--date', help='Report date (YYYY-MM-DD), otherwise from filename')
     args = parser.parse_args()
     if not os.path.isfile(args.logfile):
         print(f'Error: log file not found: {args.logfile}')
         sys.exit(1)
-    os.makedirs(args.reports_dir, exist_ok=True)
+    report_date = args.date or parse_date_from_filename(args.logfile)
+    if not report_date:
+        print('Error: could not detect date. Use --date YYYY-MM-DD', file=sys.stderr)
+        sys.exit(1)
+    day_dir = os.path.join(args.reports_dir, report_date)
+    os.makedirs(day_dir, exist_ok=True)
     errs, warns = parse_errors(args.logfile)
     by_class = defaultdict(lambda: {'ERROR': 0, 'WARN': 0})
     for r in errs:
         by_class[r['class']]['ERROR'] += 1
     for r in warns:
         by_class[r['class']]['WARN'] += 1
-    generate_html(errs, warns, by_class, os.path.join(args.reports_dir, 'index.html'))
-    generate_md(errs, warns, by_class, os.path.join(args.reports_dir, 'SUMMARY.md'))
-    generate_xlsx(errs, warns, by_class, os.path.join(args.reports_dir, 'errors.xlsx'))
-    print(f'Publish report: {len(errs)} errors, {len(warns)} warnings')
+    generate_html(errs, warns, by_class, os.path.join(day_dir, 'index.html'), report_date)
+    generate_md(errs, warns, by_class, os.path.join(day_dir, 'SUMMARY.md'), report_date)
+    generate_xlsx(errs, warns, by_class, os.path.join(day_dir, 'errors.xlsx'))
+    # Update hub index with all available dates
+    available = set()
+    if os.path.isdir(args.reports_dir):
+        for d in os.listdir(args.reports_dir):
+            if re.match(r'\d{4}-\d{2}-\d{2}', d) and os.path.isdir(os.path.join(args.reports_dir, d)):
+                available.add(d)
+    available.add(report_date)
+    generate_index_html(available, os.path.join(args.reports_dir, 'index.html'))
+    print(f'Publish report {report_date}: {len(errs)} errors, {len(warns)} warnings')
 
 if __name__ == '__main__':
     main()

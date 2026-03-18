@@ -25,8 +25,8 @@ Every morning at 05:00 Madrid time, two GitHub Actions workflows run:
 **Daily Publish Error Report** (publish):
 1. Uses the same credentials to fetch `aemerror` from the **publish** service
 2. Performs general error validation (ERROR and WARN levels)
-3. Generates HTML, Markdown, and XLSX reports in `reports/publish/`
-4. Commits and deploys to GitHub Pages at `/publish`
+3. Creates a new dated report each day in `reports/publish/YYYY-MM-DD/`
+4. Hub at `/publish` lists all available dates; each date links to its report
 
 ## Reports
 
@@ -37,9 +37,10 @@ Every morning at 05:00 Madrid time, two GitHub Actions workflows run:
 | `reports/translation_jobs_all_days.csv` | Raw data — all translation jobs with timestamps, durations, retry info |
 | `reports/translation_jobs_all_days.xlsx` | Spreadsheet — multi-sheet workbook (Jobs, Summary, Errors, RMTranslationRequest) |
 | `reports/metadata.json` | Internal — error counts and token summaries per date |
-| `reports/publish/index.html` | Publish error dashboard (ERROR/WARN by class) |
-| `reports/publish/SUMMARY.md` | Publish error summary (Markdown) |
-| `reports/publish/errors.xlsx` | Publish errors spreadsheet |
+| `reports/publish/index.html` | Hub — lists all available report dates |
+| `reports/publish/YYYY-MM-DD/index.html` | Daily publish error report (ERROR/WARN by class) |
+| `reports/publish/YYYY-MM-DD/SUMMARY.md` | Daily summary (Markdown) |
+| `reports/publish/YYYY-MM-DD/errors.xlsx` | Daily errors spreadsheet |
 
 ## Setup
 
