@@ -25,6 +25,15 @@
     "2026-03-16": {
       "ReplicationSquadListener": 12859,
       "ResourceUtils commit": 1170
+    },
+    "2026-03-17": {
+      "Language copy not found": 95728,
+      "TicketAssemblyTranslationServiceImpl": 4,
+      "ReplicationSquadListener": 30119,
+      "ResourceUtils commit": 1360,
+      "LockUtil contention": 136,
+      "TranslateHrefAttributes": 95,
+      "Error executing workflow": 21
     }
   },
   "tokens": {
@@ -51,6 +60,14 @@
       "expires": 0,
       "errors": 0,
       "token_size": 0
+    },
+    "2026-03-17": {
+      "total": 75,
+      "init": 25,
+      "obtained": 25,
+      "expires": 25,
+      "errors": 0,
+      "token_size": 0
     }
   },
   "noise": {
@@ -68,6 +85,11 @@
       "PublishLiveSummaryTranslateStep": 12029,
       "El idioma del CF no es en-us": 15544,
       "ReplicationCamerasListener": 12027
+    },
+    "2026-03-17": {
+      "PublishLiveSummaryTranslateStep": 28170,
+      "El idioma del CF no es en-us": 36379,
+      "ReplicationCamerasListener": 28163
     }
   }
 }

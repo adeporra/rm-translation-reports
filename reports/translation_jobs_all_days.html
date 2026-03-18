@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Translation Jobs Report - PROD Author (0 days)</title>
+<title>Translation Jobs Report - PROD Author (1 day)</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#232733;--border:#2e3345;--text:#e2e4ea;--muted:#8b8fa3;
 --accent:#6c8aff;--green:#34d399;--green-dim:rgba(52,211,153,.12);--red:#f87171;--red-dim:rgba(248,113,113,.12);
@@ -43,24 +43,43 @@ tr:last-child td{border-bottom:none}.m{font-family:'JetBrains Mono','Fira Code',
 .day-row.collapsed{display:none}
 </style></head><body><div class="ctr">
 
-<h1>Translation Jobs Report &mdash; PROD Author (0 Days)</h1>
-<p class="sub">Logs:  &nbsp;|&nbsp; <span class="retry-badge">RETRY TRACKING</span> &nbsp;|&nbsp; <a href="publish/" style="color:var(--accent)">Publish Errors</a></p>
+<h1>Translation Jobs Report &mdash; PROD Author (1 Day)</h1>
+<p class="sub">Logs: <span class="db" style="background:var(--blue-dim);color:var(--blue)">03-17</span> &nbsp;|&nbsp; <span class="retry-badge">RETRY TRACKING</span> &nbsp;|&nbsp; <a href="publish/" style="color:var(--accent)">Publish Errors</a></p>
 
 <div class="sr">
-<div class="sc"><div class="sl">Total Jobs</div><div class="sv a">0</div></div>
-<div class="sc"><div class="sl">Approved</div><div class="sv g">0</div></div>
+<div class="sc"><div class="sl">Total Jobs</div><div class="sv a">6</div></div>
+<div class="sc"><div class="sl">Approved</div><div class="sv g">6</div></div>
 <div class="sc"><div class="sl">Errors</div><div class="sv r">0</div></div>
 <div class="sc"><div class="sl">Stuck</div><div class="sv o">0</div></div>
 <div class="sc"><div class="sl">Unknown</div><div class="sv o">0</div></div>
 <div class="sc"><div class="sl">Retried &amp; Recovered</div><div class="sv c">0</div></div>
-<div class="sc"><div class="sl">Avg Duration</div><div class="sv a">0.0s</div>
-<div class="sd">Min 0.0s / Max 0.0s</div></div>
+<div class="sc"><div class="sl">Avg Duration</div><div class="sv a">46.0s</div>
+<div class="sd">Min 35.3s / Max 1m 19.9s</div></div>
 </div>
+<h2><span class="db" style="background:var(--blue-dim);color:var(--blue)">2026-03-17</span> &mdash; 6 jobs</h2>
+<div class="sr"><div class="sc"><div class="sl">Approved</div><div class="sv g">6</div></div></div>
+<div class="eg">
+<div class="ec"><h4>Language copy not found</h4><div class="cnt red">95,728</div></div>
+<div class="ec"><h4>TicketAssemblyTranslationServiceImpl</h4><div class="cnt muted">4</div></div>
+<div class="ec"><h4>ReplicationSquadListener</h4><div class="cnt red">30,119</div></div>
+<div class="ec"><h4>ResourceUtils commit</h4><div class="cnt red">1,360</div></div>
+<div class="ec"><h4>LockUtil contention</h4><div class="cnt red">136</div></div>
+<div class="ec"><h4>TranslateHrefAttributes</h4><div class="cnt orange">95</div></div>
+<div class="ec"><h4>Error executing workflow</h4><div class="cnt orange">21</div></div>
+</div>
+<div class="notice"><h4>RMTranslationRequest Activity</h4><p style="color:var(--muted);font-size:12px">75 entries: 25 init + 25 obtained + 25 expires + 0 chatRequestPromptJson (DEBUG level needed)</p></div>
 <h2>All Translation Jobs</h2>
 <p style="color:var(--muted);font-size:12px;margin-bottom:8px">Click a date row to expand or collapse</p>
 <div class="tw"><table>
 <thead><tr><th>Date</th><th>#</th><th>Job ID</th><th>Project</th><th>Language</th><th>Status</th><th>Created</th><th>InProgress</th><th>ReadyForReview</th><th>Approved/Error</th><th>Content Gathering</th><th>Created→InProg</th><th>InProg→Ready</th><th>Ready→Approved</th><th>Total Duration</th><th>Content Objects</th><th>Retries</th></tr></thead>
 <tbody>
+<tr class="day-header" data-date="2026-03-17" data-expanded="true"><td colspan="17"><span class="toggle">▼</span> <span class="db" style="background:var(--blue-dim);color:var(--blue)">2026-03-17</span> — 6 jobs</td></tr>
+<tr class="day-row" data-date="2026-03-17"><td><span class="db" style="background:var(--blue-dim);color:var(--blue)">03-17</span></td><td class="m">1</td><td class="m">translationjob142</td><td>Ignacio Ai Translation Project</td><td class="m">DE-DE</td><td><span class="status-ok">APPROVED</span></td><td class="m">01:35:07.803</td><td class="m">01:35:45.003</td><td class="m">01:35:45.041</td><td class="m">01:35:45.219</td><td class="m tr">16.6s</td><td class="m tr">37.2s</td><td class="m tr">0.0s</td><td class="m tr">0.2s</td><td class="m tr">37.4s</td><td class="m" style="font-size:9px">page:0, asset:0, contentFragment:4, i18nComponentStringDict:0, assetMetaData:0, tagMetadata:0, tag:0</td><td></td></tr>
+<tr class="day-row" data-date="2026-03-17"><td><span class="db" style="background:var(--blue-dim);color:var(--blue)">03-17</span></td><td class="m">2</td><td class="m">translationjob143</td><td>Ignacio Ai Translation Project</td><td class="m">PT-PT</td><td><span class="status-ok">APPROVED</span></td><td class="m">01:35:55.782</td><td class="m">01:36:34.213</td><td class="m">01:36:34.251</td><td class="m">01:36:34.424</td><td class="m tr">17.2s</td><td class="m tr">38.4s</td><td class="m tr">0.0s</td><td class="m tr">0.2s</td><td class="m tr">38.6s</td><td class="m" style="font-size:9px">page:0, asset:0, contentFragment:4, i18nComponentStringDict:0, assetMetaData:0, tagMetadata:0, tag:0</td><td></td></tr>
+<tr class="day-row" data-date="2026-03-17"><td><span class="db" style="background:var(--blue-dim);color:var(--blue)">03-17</span></td><td class="m">3</td><td class="m">translationjob144</td><td>Ignacio Ai Translation Project</td><td class="m">EN-US</td><td><span class="status-ok">APPROVED</span></td><td class="m">01:36:47.251</td><td class="m">01:38:06.891</td><td class="m">01:38:06.950</td><td class="m">01:38:07.195</td><td class="m tr">57.7s</td><td class="m tr">1m 19.6s</td><td class="m tr">0.1s</td><td class="m tr">0.2s</td><td class="m tr">1m 19.9s</td><td class="m" style="font-size:9px">page:0, asset:0, contentFragment:5, i18nComponentStringDict:0, assetMetaData:0, tagMetadata:0, tag:0</td><td></td></tr>
+<tr class="day-row" data-date="2026-03-17"><td><span class="db" style="background:var(--blue-dim);color:var(--blue)">03-17</span></td><td class="m">4</td><td class="m">translationjob145</td><td>Ignacio Ai Translation Project</td><td class="m">AR-AE</td><td><span class="status-ok">APPROVED</span></td><td class="m">01:38:24.864</td><td class="m">01:38:59.982</td><td class="m">01:39:00.021</td><td class="m">01:39:00.187</td><td class="m tr">15.9s</td><td class="m tr">35.1s</td><td class="m tr">0.0s</td><td class="m tr">0.2s</td><td class="m tr">35.3s</td><td class="m" style="font-size:9px">page:0, asset:0, contentFragment:4, i18nComponentStringDict:0, assetMetaData:0, tagMetadata:0, tag:0</td><td></td></tr>
+<tr class="day-row" data-date="2026-03-17"><td><span class="db" style="background:var(--blue-dim);color:var(--blue)">03-17</span></td><td class="m">5</td><td class="m">translationjob146</td><td>Ignacio Ai Translation Project</td><td class="m">FR-FR</td><td><span class="status-ok">APPROVED</span></td><td class="m">01:39:11.457</td><td class="m">01:39:53.430</td><td class="m">01:39:53.473</td><td class="m">01:39:53.632</td><td class="m tr">16.0s</td><td class="m tr">42.0s</td><td class="m tr">0.0s</td><td class="m tr">0.2s</td><td class="m tr">42.2s</td><td class="m" style="font-size:9px">page:0, asset:0, contentFragment:4, i18nComponentStringDict:0, assetMetaData:0, tagMetadata:0, tag:0</td><td></td></tr>
+<tr class="day-row" data-date="2026-03-17"><td><span class="db" style="background:var(--blue-dim);color:var(--blue)">03-17</span></td><td class="m">6</td><td class="m">translationjob147</td><td>Ignacio Ai Translation Project</td><td class="m">JA-JP</td><td><span class="status-ok">APPROVED</span></td><td class="m">01:40:04.332</td><td class="m">01:40:46.786</td><td class="m">01:40:46.820</td><td class="m">01:40:46.991</td><td class="m tr">17.8s</td><td class="m tr">42.5s</td><td class="m tr">0.0s</td><td class="m tr">0.2s</td><td class="m tr">42.7s</td><td class="m" style="font-size:9px">page:0, asset:0, contentFragment:4, i18nComponentStringDict:0, assetMetaData:0, tagMetadata:0, tag:0</td><td></td></tr>
 </tbody></table></div>
 <script>
     document.querySelectorAll('.day-header').forEach(function(h) {
@@ -75,5 +94,5 @@ tr:last-child td{border-bottom:none}.m{font-family:'JetBrains Mono','Fira Code',
       });
     });
     </script>
-<div class="footer">Generated 2026-03-17 05:22:43 by AEM Translation Log Analyzer</div>
+<div class="footer">Generated 2026-03-18 05:26:58 by AEM Translation Log Analyzer</div>
 </div></body></html>
