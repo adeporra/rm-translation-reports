@@ -1,6 +1,6 @@
 # Translation Jobs Report — PROD Author
 
-*2 day(s): 2026-03-17, 2026-03-18*
+*1 day(s): 2026-03-17*
 
 [**View full dashboard →**](https://adeporra.github.io/rm-translation-reports/)
 
@@ -8,8 +8,8 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Jobs** | 12 |
-| **Approved** | 12 |
+| **Total Jobs** | 6 |
+| **Approved** | 6 |
 | **Errors** | 0 |
 | **Stuck** | 0 |
 | **Unknown** | 0 |
@@ -22,19 +22,18 @@
 | Date | Jobs | Approved | Errors | Stuck | Unknown | Retried |
 |------|------|---------|--------|-------|--------|---------|
 | 2026-03-17 | 6 | 6 | 0 | 0 | 0 | 0 |
-| 2026-03-18 | 6 | 6 | 0 | 0 | 0 | 0 |
 
 ## Top error categories
 
 | Category | Total |
 |----------|-------|
-| Language copy not found | 225,252 |
-| ReplicationSquadListener | 78,280 |
-| ResourceUtils commit | 3,892 |
-| LockUtil contention | 272 |
-| TranslateHrefAttributes | 190 |
+| Language copy not found | 143,349 |
+| ReplicationSquadListener | 51,234 |
+| ResourceUtils commit | 5,694 |
+| Error executing workflow | 320 |
+| LockUtil contention | 136 |
 | ThumbnailServlet | 134 |
-| Error executing workflow | 43 |
-| TicketAssemblyTranslationServiceImpl | 12 |
+| TranslateHrefAttributes | 95 |
+| TicketAssemblyTranslationServiceImpl | 8 |
 
-*Generated 2026-03-18 10:38*
+*Generated 2026-03-18 10:48*

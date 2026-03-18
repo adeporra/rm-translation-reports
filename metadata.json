@@ -27,13 +27,14 @@
       "ResourceUtils commit": 1170
     },
     "2026-03-17": {
-      "Language copy not found": 95728,
-      "TicketAssemblyTranslationServiceImpl": 4,
-      "ReplicationSquadListener": 30119,
-      "ResourceUtils commit": 1360,
+      "Language copy not found": 143349,
+      "ThumbnailServlet": 134,
+      "TicketAssemblyTranslationServiceImpl": 8,
+      "ReplicationSquadListener": 51234,
+      "ResourceUtils commit": 5694,
       "LockUtil contention": 136,
       "TranslateHrefAttributes": 95,
-      "Error executing workflow": 21
+      "Error executing workflow": 320
     },
     "2026-03-18": {
       "Language copy not found": 129524,
@@ -105,9 +106,9 @@
       "ReplicationCamerasListener": 12027
     },
     "2026-03-17": {
-      "PublishLiveSummaryTranslateStep": 28170,
-      "El idioma del CF no es en-us": 36379,
-      "ReplicationCamerasListener": 28163
+      "PublishLiveSummaryTranslateStep": 47830,
+      "El idioma del CF no es en-us": 61522,
+      "ReplicationCamerasListener": 47829
     },
     "2026-03-18": {
       "PublishLiveSummaryTranslateStep": 44962,
