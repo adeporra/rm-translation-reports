@@ -1179,7 +1179,19 @@ def main():
         print('  WARNING: No translation jobs found in log — keeping existing report (no overwrite)')
         print('  Check: log may be empty, wrong date, or translation events use different format.')
         return
+    # Remove from filtered_rows any job that appears in new_rows (same Project+Job ID) to avoid duplicates
+    new_keys = {(r['Project'], r['Job ID']) for r in new_rows}
+    filtered_rows = [r for r in filtered_rows if (r.get('Project'), r.get('Job ID')) not in new_keys]
     all_rows = filtered_rows + new_rows
+    # Deduplicate by (Date, Project, Job ID) - keep first occurrence
+    seen = set()
+    deduped = []
+    for r in all_rows:
+        key = (r.get('Date'), r.get('Project'), r.get('Job ID'))
+        if key not in seen:
+            seen.add(key)
+            deduped.append(r)
+    all_rows = deduped
     all_rows.sort(key=lambda r: (r['Date'], int(r.get('#', '0') or '0')))
 
     # Renumber within each date
