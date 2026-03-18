@@ -209,7 +209,7 @@ WORKFLOW_RE = re.compile(r'JobHandler:\s*(/var/workflow/instances/[^:]+)')
 def parse_events(events_file, date_str):
     """Parse translation pipeline events into job records.
     Uses (project_raw, job_id) as composite key since job IDs can repeat across projects.
-    Extracts date from each log line (DD.MM.YYYY) so multi-day logs are correct.
+    All jobs are assigned date_str (TARGET_DATE) - we fetch one day's log daily.
     """
     jobs = {}
     thread_to_jobs = defaultdict(set)
@@ -225,8 +225,8 @@ def parse_events(events_file, date_str):
                 continue
 
             raw_date, timestamp, _instance, _level, thread, _cls, message = m.groups()
-            job_date = log_date_to_iso(raw_date) or date_str
-            if job_date < MIN_DATE:
+            parsed = log_date_to_iso(raw_date)
+            if parsed and parsed < MIN_DATE:
                 continue
 
             jm = JOB_PATH_RE.search(message)
@@ -242,7 +242,7 @@ def parse_events(events_file, date_str):
 
             if composite_key not in jobs:
                 jobs[composite_key] = {
-                    'date': job_date,
+                    'date': date_str,
                     'job_id': job_id,
                     'project': clean_project_name(project_raw),
                     'language': '',
@@ -457,12 +457,12 @@ def load_existing_csv(csv_path):
     return rows
 
 
-def jobs_to_rows(jobs, date_str=None):
-    """Convert parsed jobs dict to CSV row dicts. Uses job['date'] for each row (from log line)."""
-    sorted_jobs = sorted(jobs.values(), key=lambda j: (j.get('date', '') or 'zz', j.get('created', '') or 'zz'))
+def jobs_to_rows(jobs, date_str):
+    """Convert parsed jobs dict to CSV row dicts. All jobs use date_str (TARGET_DATE)."""
+    sorted_jobs = sorted(jobs.values(), key=lambda j: j.get('created', '') or 'zz')
     rows = []
     for idx, job in enumerate(sorted_jobs, 1):
-        job_date = job.get('date') or date_str or ''
+        job_date = date_str
         cg_ms = diff_ms(job['content_add_start'], job['content_add_end']) if job['content_add_start'] and job['content_add_end'] else None
         ci_ms = diff_ms(job['created'], job['in_progress']) if job['created'] and job['in_progress'] else None
         ir_ms = diff_ms(job['in_progress'], job['ready_for_review']) if job['in_progress'] and job['ready_for_review'] else None
@@ -1171,11 +1171,10 @@ def main():
 
     existing_rows = load_existing_csv(csv_path)
     existing_rows = [r for r in existing_rows if r.get('Date', '') >= MIN_DATE]
+    filtered_rows = [r for r in existing_rows if r.get('Date') != date_str]
     new_rows = jobs_to_rows(jobs, date_str)
-    dates_from_log = sorted(set(r['Date'] for r in new_rows))
-    filtered_rows = [r for r in existing_rows if r.get('Date') not in dates_from_log]
-    print(f'  Existing data: {len(existing_rows)} rows (>= {MIN_DATE})')
-    print(f'  New from log: {len(new_rows)} jobs for {len(dates_from_log)} day(s): {", ".join(dates_from_log)}')
+    print(f'  Existing data: {len(existing_rows)} rows (>= {MIN_DATE}, replacing {date_str})')
+    print(f'  New from log: {len(new_rows)} jobs for {date_str}')
     if len(jobs) == 0 and len(existing_rows) > 0:
         print('  WARNING: No translation jobs found in log — keeping existing report (no overwrite)')
         print('  Check: log may be empty, wrong date, or translation events use different format.')
@@ -1189,12 +1188,11 @@ def main():
         date_counters[r['Date']] += 1
         r['#'] = str(date_counters[r['Date']])
 
-    # Step 7: Load/update metadata (errors/tokens from whole log; attribute to each new date)
+    # Step 7: Load/update metadata
     meta = load_metadata(meta_path)
-    for d in dates_from_log:
-        meta['errors'][d] = dict(error_counts)
-        meta['tokens'][d] = rm_tokens
-        meta['noise'][d] = dict(noise_counts)
+    meta['errors'][date_str] = dict(error_counts)
+    meta['tokens'][date_str] = rm_tokens
+    meta['noise'][date_str] = dict(noise_counts)
     meta['errors'] = {d: v for d, v in meta['errors'].items() if d >= MIN_DATE}
     meta['tokens'] = {d: v for d, v in meta['tokens'].items() if d >= MIN_DATE}
     meta['noise'] = {d: v for d, v in meta['noise'].items() if d >= MIN_DATE}
