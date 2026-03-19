@@ -85,9 +85,11 @@ jobs:
         id: logs
         run: |
           DAYS_BACK="${{ github.event.inputs.days_back || '1' }}"
+          # Fetch 3 days of logs to ensure complete coverage (API may return partial data with days=1)
+          API_DAYS=3
 
           RESPONSE=$(curl -s -X GET \
-            "https://cloudmanager.adobe.io/api/program/${{ env.PROGRAM_ID }}/environment/${{ env.ENVIRONMENT_ID }}/logs?service=author&name=aemerror&days=${DAYS_BACK}" \
+            "https://cloudmanager.adobe.io/api/program/${{ env.PROGRAM_ID }}/environment/${{ env.ENVIRONMENT_ID }}/logs?service=author&name=aemerror&days=${API_DAYS}" \
             -H "Authorization: Bearer ${{ steps.auth.outputs.token }}" \
             -H "x-gw-ims-org-id: ${{ env.IMS_ORG_ID }}" \
             -H "x-api-key: ${{ secrets.ADOBE_CLIENT_ID }}" \
@@ -158,7 +160,9 @@ jobs:
           fi
 
           FILE_SIZE=$(du -h "$LOG_FILE" | cut -f1)
+          EVENT_COUNT=$(grep -c "Translation pipeline Event" "$LOG_FILE" 2>/dev/null || echo "0")
           echo "Log file: $LOG_FILE ($FILE_SIZE)"
+          echo "Translation pipeline Event lines: $EVENT_COUNT"
 
       - name: Run analysis
         run: |

@@ -209,7 +209,8 @@ WORKFLOW_RE = re.compile(r'JobHandler:\s*(/var/workflow/instances/[^:]+)')
 def parse_events(events_file, date_str):
     """Parse translation pipeline events into job records.
     Uses (project_raw, job_id) as composite key since job IDs can repeat across projects.
-    All jobs are assigned date_str (TARGET_DATE) - we fetch one day's log daily.
+    Only includes events where the log line date matches date_str (TARGET_DATE).
+    This allows fetching multi-day logs from Cloud Manager API and correctly attributing jobs.
     """
     jobs = {}
     thread_to_jobs = defaultdict(set)
@@ -227,6 +228,9 @@ def parse_events(events_file, date_str):
             raw_date, timestamp, _instance, _level, thread, _cls, message = m.groups()
             parsed = log_date_to_iso(raw_date)
             if parsed and parsed < MIN_DATE:
+                continue
+            # Only include events for the target date (Cloud Manager may return multi-day logs)
+            if parsed and parsed != date_str:
                 continue
 
             jm = JOB_PATH_RE.search(message)
@@ -323,7 +327,10 @@ def parse_api_errors(logfile, date_str):
             for line in f:
                 m = LINE_RE.match(line.strip())
                 if m:
-                    _date, timestamp, _inst, _level, thread, _cls, message = m.groups()
+                    raw_date, timestamp, _inst, _level, thread, _cls, message = m.groups()
+                    parsed = log_date_to_iso(raw_date)
+                    if parsed and parsed != date_str:
+                        continue
                     wf_match = WORKFLOW_RE.search(thread)
                     workflow_prefix = wf_match.group(1) if wf_match else thread
                     etype = 'api_payload_dump' if 'Azure Foundry' in message else 'token_request_error'
