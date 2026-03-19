@@ -37,14 +37,19 @@
       "Error executing workflow": 320
     },
     "2026-03-18": {
-      "Language copy not found": 129524,
-      "ThumbnailServlet": 134,
-      "TicketAssemblyTranslationServiceImpl": 8,
-      "ReplicationSquadListener": 48161,
-      "ResourceUtils commit": 2532,
-      "LockUtil contention": 136,
-      "TranslateHrefAttributes": 95,
-      "Error executing workflow": 22
+      "Language copy not found": 380300,
+      "Failed to start translation": 2,
+      "Error processing Translation project": 8,
+      "TranslationCleanupJobConsumer": 17,
+      "ThumbnailServlet": 492,
+      "TicketAssemblyTranslationServiceImpl": 70,
+      "GCCScriptProcessor": 32,
+      "ReplicationSquadListener": 220470,
+      "ReplicationNewsAssemblyListener": 23122,
+      "ResourceUtils commit": 26165,
+      "LockUtil contention": 2285,
+      "TranslateHrefAttributes": 1118,
+      "Error executing workflow": 1163
     }
   },
   "tokens": {
@@ -81,10 +86,10 @@
       "token_size": 0
     },
     "2026-03-18": {
-      "total": 75,
-      "init": 25,
-      "obtained": 25,
-      "expires": 25,
+      "total": 896,
+      "init": 300,
+      "obtained": 301,
+      "expires": 295,
       "errors": 0,
       "token_size": 0
     }
@@ -111,9 +116,9 @@
       "ReplicationCamerasListener": 47829
     },
     "2026-03-18": {
-      "PublishLiveSummaryTranslateStep": 44962,
-      "El idioma del CF no es en-us": 57835,
-      "ReplicationCamerasListener": 44961
+      "PublishLiveSummaryTranslateStep": 205737,
+      "El idioma del CF no es en-us": 272080,
+      "ReplicationCamerasListener": 205747
     }
   }
 }
