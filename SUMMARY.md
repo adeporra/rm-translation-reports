@@ -1,6 +1,6 @@
 # Translation Jobs Report — PROD Author
 
-*4 day(s): 2026-03-21, 2026-03-22, 2026-03-23, 2026-03-24*
+*5 day(s): 2026-03-21, 2026-03-22, 2026-03-23, 2026-03-24, 2026-03-25*
 
 [**View full dashboard →**](https://adeporra.github.io/rm-translation-reports/)
 
@@ -8,13 +8,13 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Jobs** | 334 |
-| **Approved** | 309 |
+| **Total Jobs** | 421 |
+| **Approved** | 383 |
 | **Errors** | 0 |
-| **Stuck** | 12 |
+| **Stuck** | 25 |
 | **Unknown** | 13 |
-| **Retried & Recovered** | 9 |
-| **Avg Duration** | 11.1s |
+| **Retried & Recovered** | 16 |
+| **Avg Duration** | 11.0s |
 | **Min / Max** | 1.7s / 1m 45.3s |
 
 ## Per-day breakdown
@@ -25,6 +25,7 @@
 | 2026-03-22 | 137 | 126 | 0 | 2 | 9 | 0 |
 | 2026-03-23 | 78 | 71 | 0 | 3 | 4 | 3 |
 | 2026-03-24 | 65 | 59 | 0 | 6 | 0 | 6 |
+| 2026-03-25 | 87 | 74 | 0 | 13 | 0 | 7 |
 
 ## Retry detection
 
@@ -39,20 +40,27 @@
 | 2026-03-24 | 15 | `translationjob61` | Nathalie Ai Translation Project | EN-US | API call failed (token_request_error) | IN_PROGRESS |
 | 2026-03-24 | 31 | `translationjob14` | Maria Ai Translation Project | EN-US | API call failed (token_request_error) | IN_PROGRESS |
 | 2026-03-24 | 55 | `translationjob243` | Alejandro Ai Translation Project | EN-US | API call failed (token_request_error) | IN_PROGRESS |
+| 2026-03-25 | 17 | `translationjob22` | Maria Ai Translation Project | EN-US | API call failed (token_request_error) | IN_PROGRESS |
+| 2026-03-25 | 21 | `translationjob26` | Maria Ai Translation Project | JA-JP | API call failed (token_request_error) | IN_PROGRESS |
+| 2026-03-25 | 23 | `translationjob28` | Maria Ai Translation Project | PT-PT | API call failed (token_request_error) | IN_PROGRESS |
+| 2026-03-25 | 26 | `translationjob31` | Maria Ai Translation Project | AR-AE | API call failed (token_request_error) | IN_PROGRESS |
+| 2026-03-25 | 27 | `translationjob32` | Maria Ai Translation Project | AR-AE | API call failed (token_request_error) | IN_PROGRESS |
+| 2026-03-25 | 28 | `translationjob33` | Maria Ai Translation Project | FR-FR | API call failed (token_request_error) → retried → APPROVED | APPROVED |
+| 2026-03-25 | 30 | `translationjob35` | Maria Ai Translation Project | JA-JP | API call failed (token_request_error) | IN_PROGRESS |
 
 ## Top error categories
 
 | Category | Total |
 |----------|-------|
-| Language copy not found | 619,107 |
-| ReplicationSquadListener | 396,996 |
-| ReplicationNewsAssemblyListener | 172,983 |
-| ResourceUtils commit | 64,235 |
-| TranslateHrefAttributes | 6,986 |
-| LockUtil contention | 6,466 |
-| Error executing workflow | 2,864 |
-| TranslationCleanupJobConsumer | 809 |
-| ThumbnailServlet | 544 |
-| Content LC unknown state | 347 |
+| Language copy not found | 670,235 |
+| ReplicationSquadListener | 535,628 |
+| ReplicationNewsAssemblyListener | 211,542 |
+| ResourceUtils commit | 80,000 |
+| LockUtil contention | 8,037 |
+| TranslateHrefAttributes | 7,980 |
+| Error executing workflow | 3,162 |
+| TranslationCleanupJobConsumer | 823 |
+| ThumbnailServlet | 614 |
+| Content LC unknown state | 457 |
 
-*Generated 2026-03-25 05:25*
+*Generated 2026-03-26 05:43*
