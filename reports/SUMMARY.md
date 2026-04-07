@@ -1,6 +1,6 @@
 # Translation Jobs Report — PROD Author
 
-*2 day(s): 2026-04-04, 2026-04-05*
+*3 day(s): 2026-04-04, 2026-04-05, 2026-04-06*
 
 [**View full dashboard →**](https://adeporra.github.io/rm-translation-reports/)
 
@@ -8,13 +8,13 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Jobs** | 140 |
-| **Approved** | 140 |
+| **Total Jobs** | 234 |
+| **Approved** | 234 |
 | **Errors** | 0 |
 | **Stuck** | 0 |
 | **Unknown** | 0 |
 | **Retried & Recovered** | 0 |
-| **Avg Duration** | 12.9s |
+| **Avg Duration** | 11.7s |
 | **Min / Max** | 1.6s / 2m 29.9s |
 
 ## Per-day breakdown
@@ -23,20 +23,21 @@
 |------|------|---------|--------|-------|--------|---------|
 | 2026-04-04 | 60 | 60 | 0 | 0 | 0 | 0 |
 | 2026-04-05 | 80 | 80 | 0 | 0 | 0 | 0 |
+| 2026-04-06 | 94 | 94 | 0 | 0 | 0 | 0 |
 
 ## Top error categories
 
 | Category | Total |
 |----------|-------|
-| Language copy not found | 502,041 |
-| ReplicationSquadListener | 341,319 |
-| ResourceUtils commit | 41,488 |
-| LockUtil contention | 3,098 |
-| Error executing workflow | 1,674 |
-| TranslateHrefAttributes | 1,328 |
-| TranslationCleanupJobConsumer | 544 |
-| Content LC unknown state | 199 |
-| ThumbnailServlet | 31 |
-| TicketAssemblyTranslationServiceImpl | 28 |
+| Language copy not found | 562,200 |
+| ReplicationSquadListener | 481,071 |
+| ReplicationNewsAssemblyListener | 55,353 |
+| ResourceUtils commit | 54,990 |
+| LockUtil contention | 4,880 |
+| TranslateHrefAttributes | 2,382 |
+| Error executing workflow | 1,961 |
+| TranslationCleanupJobConsumer | 548 |
+| Content LC unknown state | 309 |
+| ThumbnailServlet | 100 |
 
-*Generated 2026-04-06 06:00*
+*Generated 2026-04-07 05:48*
