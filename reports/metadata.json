@@ -41,6 +41,20 @@
       "LockUtil contention": 1782,
       "TranslateHrefAttributes": 1054,
       "Error executing workflow": 287
+    },
+    "2026-04-07": {
+      "Language copy not found": 253573,
+      "Content LC unknown state": 89,
+      "TranslationCleanupJobConsumer": 4,
+      "ThumbnailServlet": 69,
+      "TicketAssemblyTranslationServiceImpl": 36,
+      "GCCScriptProcessor": 10,
+      "ReplicationSquadListener": 173166,
+      "ReplicationNewsAssemblyListener": 92531,
+      "ResourceUtils commit": 20714,
+      "LockUtil contention": 2013,
+      "TranslateHrefAttributes": 1282,
+      "Error executing workflow": 812
     }
   },
   "tokens": {
@@ -67,6 +81,14 @@
       "expires": 259,
       "errors": 0,
       "token_size": 0
+    },
+    "2026-04-07": {
+      "total": 882,
+      "init": 294,
+      "obtained": 294,
+      "expires": 294,
+      "errors": 0,
+      "token_size": 0
     }
   },
   "noise": {
@@ -84,6 +106,11 @@
       "PublishLiveSummaryTranslateStep": 130555,
       "El idioma del CF no es en-us": 187014,
       "ReplicationCamerasListener": 130553
+    },
+    "2026-04-07": {
+      "PublishLiveSummaryTranslateStep": 136466,
+      "El idioma del CF no es en-us": 232353,
+      "ReplicationCamerasListener": 161634
     }
   }
 }
