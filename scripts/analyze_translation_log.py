@@ -43,6 +43,7 @@ CSV_COLUMNS = [
     'Ready→Approved (ms)', 'Ready→Approved',
     'Total Duration (ms)', 'Total Duration',
     'Content Objects', 'Content Size', 'Errors', 'Retries', 'Retry Detail',
+    'API Requests', 'Prompt Tokens', 'Completion Tokens', 'Total Tokens', 'Avg Latency (ms)',
 ]
 
 EVENT_NAMES = [
@@ -82,6 +83,7 @@ NOISE_PATTERNS = [
 ]
 
 MIN_DATE = '2026-03-11'  # Rows before this date are excluded from reports
+TOKEN_TRACKING_START = '2026-04-14'  # OpenAI token tracking available from this date
 
 # ---------------------------------------------------------------------------
 # Utility helpers
@@ -429,6 +431,137 @@ def parse_rm_translation_requests(logfile):
     return summary
 
 # ---------------------------------------------------------------------------
+# OpenAI token usage parsing (available from TOKEN_TRACKING_START)
+# ---------------------------------------------------------------------------
+
+TOKEN_USAGE_RE = re.compile(
+    r'RMTRANSLATION_TRACK_TOKEN_USAGE:\s*'
+    r'requestId=(\S+?),\s*'
+    r'promptTokens=(\d+),\s*'
+    r'completionTokens=(\d+),\s*'
+    r'totalTokens=(\d+),\s*'
+    r'.*?'
+    r'httpStatus=(\d+),\s*'
+    r'latencyMs=(\d+),\s*'
+    r'targetLanguage=(\S+?),\s*'
+    r'targetLanguageWeight=(\S+)'
+)
+
+REQUEST_START_RE = re.compile(
+    r'RMTRANSLATION_TRACK_REQUEST_START:\s*'
+    r'requestId=(\S+?),\s*'
+    r'.*?model=(\S+?),'
+)
+
+
+def parse_openai_token_usage(logfile, date_str):
+    """Parse RMTRANSLATION_TRACK entries and return per-workflow-thread aggregated token data.
+
+    Returns dict: workflow_prefix -> {
+        'requests': int, 'prompt_tokens': int, 'completion_tokens': int,
+        'total_tokens': int, 'total_latency_ms': int, 'model': str,
+        'details': [per-request dicts]
+    }
+    """
+    if date_str < TOKEN_TRACKING_START:
+        return {}
+
+    tmp = tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False)
+    tmp.close()
+    count = grep_extract(logfile, 'RMTRANSLATION_TRACK', tmp.name)
+    if count == 0:
+        os.unlink(tmp.name)
+        return {}
+
+    by_thread = defaultdict(lambda: {
+        'requests': 0, 'prompt_tokens': 0, 'completion_tokens': 0,
+        'total_tokens': 0, 'total_latency_ms': 0, 'model': '',
+        'details': [],
+    })
+
+    with open(tmp.name, 'r') as f:
+        for line in f:
+            m = LINE_RE.match(line.strip())
+            if not m:
+                continue
+            raw_date, _ts, _inst, _level, thread, _cls, message = m.groups()
+            parsed = log_date_to_iso(raw_date)
+            if parsed and parsed != date_str:
+                continue
+
+            wf_match = WORKFLOW_RE.search(thread)
+            workflow_prefix = wf_match.group(1) if wf_match else thread
+
+            tm = TOKEN_USAGE_RE.search(message)
+            if tm:
+                req_id, prompt, completion, total, http_status, latency, lang, weight = tm.groups()
+                entry = by_thread[workflow_prefix]
+                entry['requests'] += 1
+                entry['prompt_tokens'] += int(prompt)
+                entry['completion_tokens'] += int(completion)
+                entry['total_tokens'] += int(total)
+                entry['total_latency_ms'] += int(latency)
+                entry['details'].append({
+                    'request_id': req_id,
+                    'prompt_tokens': int(prompt),
+                    'completion_tokens': int(completion),
+                    'total_tokens': int(total),
+                    'latency_ms': int(latency),
+                    'language': lang,
+                    'http_status': int(http_status),
+                })
+                continue
+
+            sm = REQUEST_START_RE.search(message)
+            if sm:
+                _req_id, model = sm.groups()
+                entry = by_thread[workflow_prefix]
+                if not entry['model']:
+                    entry['model'] = model
+
+    os.unlink(tmp.name)
+    return dict(by_thread)
+
+
+def attach_token_usage_to_jobs(jobs, thread_to_jobs, token_by_thread):
+    """Match token usage data to jobs via shared workflow thread prefix."""
+    if not token_by_thread:
+        return
+
+    for wf_prefix, token_data in token_by_thread.items():
+        if wf_prefix not in thread_to_jobs:
+            continue
+
+        wf_job_keys = thread_to_jobs[wf_prefix]
+        if len(wf_job_keys) == 1:
+            ck = next(iter(wf_job_keys))
+            if ck in jobs:
+                job = jobs[ck]
+                job['api_requests'] = token_data['requests']
+                job['prompt_tokens'] = token_data['prompt_tokens']
+                job['completion_tokens'] = token_data['completion_tokens']
+                job['total_tokens'] = token_data['total_tokens']
+                job['avg_latency_ms'] = (
+                    token_data['total_latency_ms'] // token_data['requests']
+                    if token_data['requests'] else 0
+                )
+        else:
+            per_job = token_data['requests'] // max(len(wf_job_keys), 1)
+            remainder = token_data['requests'] % max(len(wf_job_keys), 1)
+            for i, ck in enumerate(sorted(wf_job_keys)):
+                if ck not in jobs:
+                    continue
+                job = jobs[ck]
+                job['api_requests'] = token_data['requests']
+                job['prompt_tokens'] = token_data['prompt_tokens']
+                job['completion_tokens'] = token_data['completion_tokens']
+                job['total_tokens'] = token_data['total_tokens']
+                job['avg_latency_ms'] = (
+                    token_data['total_latency_ms'] // token_data['requests']
+                    if token_data['requests'] else 0
+                )
+
+# ---------------------------------------------------------------------------
 # Error categorization
 # ---------------------------------------------------------------------------
 
@@ -507,6 +640,11 @@ def jobs_to_rows(jobs, date_str):
             'Errors': job['errors'],
             'Retries': job.get('retries', ''),
             'Retry Detail': job.get('retry_detail', ''),
+            'API Requests': str(job.get('api_requests', '')) if job.get('api_requests') else '',
+            'Prompt Tokens': str(job.get('prompt_tokens', '')) if job.get('prompt_tokens') else '',
+            'Completion Tokens': str(job.get('completion_tokens', '')) if job.get('completion_tokens') else '',
+            'Total Tokens': str(job.get('total_tokens', '')) if job.get('total_tokens') else '',
+            'Avg Latency (ms)': str(job.get('avg_latency_ms', '')) if job.get('avg_latency_ms') else '',
         }
         rows.append(row)
     return rows
@@ -654,8 +792,18 @@ def generate_html(all_rows, errors_by_date, rm_tokens_by_date, html_path):
 <div class="sc"><div class="sl">Retried &amp; Recovered</div><div class="sv c">{retried}</div></div>
 <div class="sc"><div class="sl">Avg Duration</div><div class="sv a">{ms_to_human(avg_dur)}</div>
 <div class="sd">Min {ms_to_human(min_dur)} / Max {ms_to_human(max_dur)}</div></div>
-</div>
 '''
+
+    global_prompt = sum(int(r.get('Prompt Tokens') or 0) for r in all_rows)
+    global_compl = sum(int(r.get('Completion Tokens') or 0) for r in all_rows)
+    global_total_tk = sum(int(r.get('Total Tokens') or 0) for r in all_rows)
+    global_api_req = sum(int(r.get('API Requests') or 0) for r in all_rows)
+    if global_total_tk > 0:
+        html += f'<div class="sc"><div class="sl">API Requests</div><div class="sv p">{global_api_req:,}</div></div>'
+        html += f'<div class="sc"><div class="sl">Total Tokens</div><div class="sv p">{global_total_tk:,}</div>'
+        html += f'<div class="sd">Prompt {global_prompt:,} / Completion {global_compl:,}</div></div>'
+
+    html += '</div>\n'
 
     # Retry detection summary
     retry_rows = [r for r in all_rows if r.get('Retries') and int(r.get('Retries', '0') or '0') > 0]
@@ -694,6 +842,15 @@ def generate_html(all_rows, errors_by_date, rm_tokens_by_date, html_path):
             html += f'<div class="sc"><div class="sl">Unknown</div><div class="sv o">{d_unk}</div></div>'
         if d_retry:
             html += f'<div class="sc"><div class="sl">Retried</div><div class="sv c">{d_retry}</div></div>'
+
+        d_prompt = sum(int(r.get('Prompt Tokens') or 0) for r in day_rows)
+        d_compl = sum(int(r.get('Completion Tokens') or 0) for r in day_rows)
+        d_total_tk = sum(int(r.get('Total Tokens') or 0) for r in day_rows)
+        d_api_req = sum(int(r.get('API Requests') or 0) for r in day_rows)
+        if d_total_tk > 0:
+            html += f'<div class="sc"><div class="sl">API Requests</div><div class="sv p">{d_api_req:,}</div></div>'
+            html += f'<div class="sc"><div class="sl">Total Tokens</div><div class="sv p">{d_total_tk:,}</div>'
+            html += f'<div class="sd">Prompt {d_prompt:,} / Completion {d_compl:,}</div></div>'
         html += '</div>\n'
 
         # Error summary for this date
@@ -722,7 +879,8 @@ def generate_html(all_rows, errors_by_date, rm_tokens_by_date, html_path):
     display_cols = ['Date', '#', 'Job ID', 'Project', 'Language', 'Status',
                     'Created', 'InProgress', 'ReadyForReview', 'Approved/Error',
                     'Content Gathering', 'Created→InProg', 'InProg→Ready',
-                    'Ready→Approved', 'Total Duration', 'Content Objects', 'Retries']
+                    'Ready→Approved', 'Total Duration', 'Content Objects', 'Retries',
+                    'API Req', 'Prompt Tk', 'Compl Tk', 'Total Tk', 'Avg Lat']
     for c in display_cols:
         html += f'<th>{c}</th>'
     html += '</tr></thead>\n<tbody>\n'
@@ -731,7 +889,7 @@ def generate_html(all_rows, errors_by_date, rm_tokens_by_date, html_path):
         day_rows = [r for r in all_rows if r['Date'] == d]
         col, bg = date_color_map[d]
         html += f'<tr class="day-header" data-date="{d}" data-expanded="true">'
-        html += f'<td colspan="17"><span class="toggle">▼</span> <span class="db" style="background:{bg};color:{col}">{d}</span> — {len(day_rows)} jobs</td></tr>\n'
+        html += f'<td colspan="{len(display_cols)}"><span class="toggle">▼</span> <span class="db" style="background:{bg};color:{col}">{d}</span> — {len(day_rows)} jobs</td></tr>\n'
 
         for r in day_rows:
             row_class = 'day-row'
@@ -770,6 +928,17 @@ def generate_html(all_rows, errors_by_date, rm_tokens_by_date, html_path):
                 html += f'<td><span class="retry-badge">{retries_val}</span></td>'
             else:
                 html += '<td></td>'
+
+            html += f'<td class="m tr">{r.get("API Requests","")}</td>'
+            html += f'<td class="m tr">{r.get("Prompt Tokens","")}</td>'
+            html += f'<td class="m tr">{r.get("Completion Tokens","")}</td>'
+            total_tk = r.get('Total Tokens', '')
+            if total_tk:
+                html += f'<td class="m tr" style="font-weight:600;color:var(--purple)">{total_tk}</td>'
+            else:
+                html += '<td></td>'
+            avg_lat = r.get('Avg Latency (ms)', '')
+            html += f'<td class="m tr">{ms_to_human(int(avg_lat)) if avg_lat else ""}</td>'
             html += '</tr>\n'
 
     html += '</tbody></table></div>\n'
@@ -839,22 +1008,44 @@ def generate_summary_md(all_rows, errors_by_date, rm_tokens_by_date, md_path, pa
         f'| **Retried & Recovered** | {retried} |',
         f'| **Avg Duration** | {avg_dur} |',
         f'| **Min / Max** | {min_dur} / {max_dur} |',
+    ]
+
+    global_total_tk = sum(int(r.get('Total Tokens') or 0) for r in all_rows)
+    if global_total_tk > 0:
+        global_prompt = sum(int(r.get('Prompt Tokens') or 0) for r in all_rows)
+        global_compl = sum(int(r.get('Completion Tokens') or 0) for r in all_rows)
+        global_api_req = sum(int(r.get('API Requests') or 0) for r in all_rows)
+        lines.extend([
+            f'| **API Requests** | {global_api_req:,} |',
+            f'| **Total Tokens** | {global_total_tk:,} |',
+            f'| **Prompt / Completion** | {global_prompt:,} / {global_compl:,} |',
+        ])
+
+    lines.extend([
         '',
         '## Per-day breakdown',
         '',
-        '| Date | Jobs | Approved | Errors | Stuck | Unknown | Retried |',
-        '|------|------|---------|--------|-------|--------|---------|',
-    ]
+        '| Date | Jobs | Approved | Errors | Stuck | Unknown | Retried | Total Tokens |',
+        '|------|------|---------|--------|-------|--------|---------|-------------|',
+    ])
 
     for d in dates:
         day_rows = [r for r in all_rows if r['Date'] == d]
+        d_tokens = sum(int(r.get('Total Tokens') or 0) for r in day_rows)
         lines.append(
             f"| {d} | {len(day_rows)} | "
             f"{sum(1 for r in day_rows if r['Status'] == 'APPROVED')} | "
             f"{sum(1 for r in day_rows if r['Status'] == 'ERROR')} | "
             f"{sum(1 for r in day_rows if r['Status'] in ('IN_PROGRESS', 'READY_FOR_REVIEW'))} | "
             f"{sum(1 for r in day_rows if r['Status'] == 'UNKNOWN')} | "
-            f"{sum(1 for r in day_rows if r.get('Retries') and int(r.get('Retries', '0') or '0') > 0)} |"
+            f"{sum(1 for r in day_rows if r.get('Retries') and int(r.get('Retries', '0') or '0') > 0)} | "
+            f"{d_tokens:,} |" if d_tokens else
+            f"| {d} | {len(day_rows)} | "
+            f"{sum(1 for r in day_rows if r['Status'] == 'APPROVED')} | "
+            f"{sum(1 for r in day_rows if r['Status'] == 'ERROR')} | "
+            f"{sum(1 for r in day_rows if r['Status'] in ('IN_PROGRESS', 'READY_FOR_REVIEW'))} | "
+            f"{sum(1 for r in day_rows if r['Status'] == 'UNKNOWN')} | "
+            f"{sum(1 for r in day_rows if r.get('Retries') and int(r.get('Retries', '0') or '0') > 0)} | — |"
         )
 
     retry_rows = [r for r in all_rows if r.get('Retries') and int(r.get('Retries', '0') or '0') > 0]
@@ -938,7 +1129,8 @@ def generate_xlsx(all_rows, errors_by_date, rm_tokens_by_date, xlsx_path):
         for ci, col_name in enumerate(CSV_COLUMNS, 1):
             val = row.get(col_name, '')
             if col_name in ('Content Gathering (ms)', 'Created→InProg (ms)', 'InProg→Ready (ms)',
-                            'Ready→Approved (ms)', 'Total Duration (ms)', '#', 'Content Size', 'Retries'):
+                            'Ready→Approved (ms)', 'Total Duration (ms)', '#', 'Content Size', 'Retries',
+                            'API Requests', 'Prompt Tokens', 'Completion Tokens', 'Total Tokens', 'Avg Latency (ms)'):
                 try:
                     val = int(val) if val else ''
                 except ValueError:
@@ -972,7 +1164,8 @@ def generate_xlsx(all_rows, errors_by_date, rm_tokens_by_date, xlsx_path):
     ws2 = wb.create_sheet('Summary')
     dates = sorted(set(r['Date'] for r in all_rows))
     summary_headers = ['Date', 'Total Jobs', 'Approved', 'Errors', 'Stuck', 'Unknown', 'Retried',
-                       'Avg Duration', 'Min Duration', 'Max Duration']
+                       'Avg Duration', 'Min Duration', 'Max Duration',
+                       'API Requests', 'Prompt Tokens', 'Completion Tokens', 'Total Tokens']
     for ci, h in enumerate(summary_headers, 1):
         cell = ws2.cell(row=1, column=ci, value=h)
         cell.font = header_font
@@ -988,6 +1181,10 @@ def generate_xlsx(all_rows, errors_by_date, rm_tokens_by_date, xlsx_path):
                     durs.append(int(v))
                 except ValueError:
                     pass
+        d_api_req = sum(int(r.get('API Requests') or 0) for r in day_rows)
+        d_prompt = sum(int(r.get('Prompt Tokens') or 0) for r in day_rows)
+        d_compl = sum(int(r.get('Completion Tokens') or 0) for r in day_rows)
+        d_total_tk = sum(int(r.get('Total Tokens') or 0) for r in day_rows)
         vals = [
             d,
             len(day_rows),
@@ -999,6 +1196,10 @@ def generate_xlsx(all_rows, errors_by_date, rm_tokens_by_date, xlsx_path):
             ms_to_human(sum(durs) / len(durs)) if durs else '',
             ms_to_human(min(durs)) if durs else '',
             ms_to_human(max(durs)) if durs else '',
+            d_api_req if d_api_req else '',
+            d_prompt if d_prompt else '',
+            d_compl if d_compl else '',
+            d_total_tk if d_total_tk else '',
         ]
         for ci, v in enumerate(vals, 1):
             ws2.cell(row=ri, column=ci, value=v).border = thin_border
@@ -1157,6 +1358,22 @@ def main():
         retried = sum(1 for j in jobs.values() if j.get('retries'))
         print(f'    Detected {retried} retried jobs')
 
+    # Step 3b: Parse OpenAI token usage
+    if date_str >= TOKEN_TRACKING_START:
+        print('  Parsing OpenAI token usage (RMTRANSLATION_TRACK)...')
+        token_by_thread = parse_openai_token_usage(logfile, date_str)
+        if token_by_thread:
+            attach_token_usage_to_jobs(jobs, thread_to_jobs, token_by_thread)
+            jobs_with_tokens = sum(1 for j in jobs.values() if j.get('total_tokens'))
+            total_tokens = sum(j.get('total_tokens', 0) for j in jobs.values())
+            total_api_req = sum(j.get('api_requests', 0) for j in jobs.values())
+            print(f'    {len(token_by_thread)} workflow threads with token data')
+            print(f'    {jobs_with_tokens} jobs with tokens, {total_api_req} API requests, {total_tokens:,} total tokens')
+        else:
+            print('    No RMTRANSLATION_TRACK entries found')
+    else:
+        print(f'  Skipping OpenAI token parsing (available from {TOKEN_TRACKING_START})')
+
     # Step 4: Parse RMTranslationRequest entries
     print('  Parsing RMTranslationRequest entries...')
     rm_tokens = parse_rm_translation_requests(logfile)
@@ -1248,6 +1465,9 @@ def main():
     print(f'  Approved: {sum(1 for r in all_rows if r["Status"] == "APPROVED")}')
     print(f'  Errors: {sum(1 for r in all_rows if r["Status"] == "ERROR")}')
     print(f'  Retried: {sum(1 for r in all_rows if r.get("Retries") and int(r.get("Retries","0") or "0") > 0)}')
+    total_tk = sum(int(r.get('Total Tokens') or 0) for r in all_rows if r.get('Date') == date_str)
+    if total_tk:
+        print(f'  OpenAI tokens (today): {total_tk:,}')
 
 
 if __name__ == '__main__':
