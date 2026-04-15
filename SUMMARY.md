@@ -19,12 +19,12 @@
 
 ## Per-day breakdown
 
-| Date | Jobs | Approved | Errors | Stuck | Unknown | Retried |
-|------|------|---------|--------|-------|--------|---------|
-| 2026-04-11 | 47 | 47 | 0 | 0 | 0 | 0 |
-| 2026-04-12 | 81 | 77 | 0 | 4 | 0 | 0 |
-| 2026-04-13 | 46 | 46 | 0 | 0 | 0 | 0 |
-| 2026-04-14 | 70 | 70 | 0 | 0 | 0 | 2 |
+| Date | Jobs | Approved | Errors | Stuck | Unknown | Retried | Total Tokens |
+|------|------|---------|--------|-------|--------|---------|-------------|
+| 2026-04-11 | 47 | 47 | 0 | 0 | 0 | 0 | — |
+| 2026-04-12 | 81 | 77 | 0 | 4 | 0 | 0 | — |
+| 2026-04-13 | 46 | 46 | 0 | 0 | 0 | 0 | — |
+| 2026-04-14 | 70 | 70 | 0 | 0 | 0 | 2 | — |
 
 ## Retry detection
 
@@ -37,15 +37,15 @@
 
 | Category | Total |
 |----------|-------|
-| ReplicationSquadListener | 577,339 |
-| Language copy not found | 355,389 |
-| ReplicationNewsAssemblyListener | 251,168 |
-| ResourceUtils commit | 53,807 |
-| LockUtil contention | 5,900 |
-| TranslateHrefAttributes | 4,264 |
+| ReplicationSquadListener | 591,641 |
+| Language copy not found | 355,413 |
+| ReplicationNewsAssemblyListener | 251,643 |
+| ResourceUtils commit | 54,971 |
+| LockUtil contention | 6,112 |
+| TranslateHrefAttributes | 4,578 |
 | Error executing workflow | 1,082 |
 | TranslationCleanupJobConsumer | 648 |
 | ThumbnailServlet | 374 |
 | Content LC unknown state | 178 |
 
-*Generated 2026-04-15 06:02*
+*Generated 2026-04-15 11:38*
