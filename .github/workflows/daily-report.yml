@@ -2,8 +2,9 @@ name: Daily Translation Report
 
 on:
   schedule:
-    # 04:00 UTC = 05:00 CET (Madrid winter) / 06:00 CEST (Madrid summer)
-    - cron: '0 4 * * *'
+    # 06:00 UTC = 07:00 CET (Madrid winter) / 08:00 CEST (Madrid summer)
+    # Runs later to ensure the previous day's log is fully available in Cloud Manager API
+    - cron: '0 6 * * *'
   workflow_dispatch:
     inputs:
       days_back:
@@ -160,9 +161,18 @@ jobs:
           fi
 
           FILE_SIZE=$(du -h "$LOG_FILE" | cut -f1)
+          LINE_COUNT=$(wc -l < "$LOG_FILE")
           EVENT_COUNT=$(grep -c "Translation pipeline Event" "$LOG_FILE" 2>/dev/null || echo "0")
-          echo "Log file: $LOG_FILE ($FILE_SIZE)"
+          echo "Log file: $LOG_FILE ($FILE_SIZE, $LINE_COUNT lines)"
           echo "Translation pipeline Event lines: $EVENT_COUNT"
+          echo "Date distribution in log:"
+          head -1 "$LOG_FILE" | awk '{print "  First line: " $1 " " $2}'
+          tail -1 "$LOG_FILE" | awk '{print "  Last line:  " $1 " " $2}'
+          echo "  Events by date:"
+          grep "Translation pipeline Event" "$LOG_FILE" | awk '{print $1}' | sort | uniq -c | sort -rn
+          LOG_DATE=$(echo "$TARGET_DATE" | awk -F- '{print $3"."$2"."$1}')
+          TARGET_EVENTS=$(grep -c "^${LOG_DATE}" "$LOG_FILE" 2>/dev/null || echo 0)
+          echo "  Target date lines ($LOG_DATE): $TARGET_EVENTS"
 
       - name: Run analysis
         run: |
