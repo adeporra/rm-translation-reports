@@ -1,6 +1,6 @@
 # Translation Jobs Report — PROD Author
 
-*2 day(s): 2026-04-18, 2026-04-19*
+*3 day(s): 2026-04-18, 2026-04-19, 2026-04-20*
 
 [**View full dashboard →**](https://adeporra.github.io/rm-translation-reports/)
 
@@ -8,17 +8,17 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Jobs** | 106 |
-| **Approved** | 97 |
+| **Total Jobs** | 190 |
+| **Approved** | 180 |
 | **Errors** | 0 |
 | **Stuck** | 7 |
-| **Unknown** | 2 |
-| **Retried & Recovered** | 0 |
-| **Avg Duration** | 5.9s |
-| **Min / Max** | 2.5s / 14.4s |
-| **API Requests** | 660 |
-| **Total Tokens** | 1,416,094 |
-| **Prompt / Completion** | 1,141,734 / 274,360 |
+| **Unknown** | 3 |
+| **Retried & Recovered** | 1 |
+| **Avg Duration** | 9.9s |
+| **Min / Max** | 2.0s / 1m 21.1s |
+| **API Requests** | 1,337 |
+| **Total Tokens** | 2,963,249 |
+| **Prompt / Completion** | 2,361,630 / 601,619 |
 
 ## Per-day breakdown
 
@@ -26,20 +26,27 @@
 |------|------|---------|--------|-------|--------|---------|-------------|
 | 2026-04-18 | 52 | 43 | 0 | 7 | 2 | 0 | 478,030 |
 | 2026-04-19 | 54 | 54 | 0 | 0 | 0 | 0 | 938,064 |
+| 2026-04-20 | 84 | 83 | 0 | 0 | 1 | 1 | 1,547,155 |
+
+## Retry detection
+
+| Date | # | Job ID | Project | Language | Detail | Status |
+|------|---|--------|---------|----------|--------|--------|
+| 2026-04-20 | 67 | `translationjob143` | Ignacio Ai Translation Project | JA-JP | API call failed (api_payload_dump) → retried → APPROVED | APPROVED |
 
 ## Top error categories
 
 | Category | Total |
 |----------|-------|
-| ReplicationSquadListener | 275,429 |
-| Language copy not found | 26,674 |
-| ResourceUtils commit | 23,342 |
-| ReplicationNewsAssemblyListener | 7,324 |
-| TranslateHrefAttributes | 5,244 |
-| LockUtil contention | 2,605 |
-| Error executing workflow | 555 |
+| ReplicationSquadListener | 422,395 |
+| Language copy not found | 53,963 |
+| ResourceUtils commit | 35,794 |
+| ReplicationNewsAssemblyListener | 14,635 |
+| TranslateHrefAttributes | 8,421 |
+| LockUtil contention | 3,947 |
+| Error executing workflow | 677 |
+| ThumbnailServlet | 422 |
 | TranslationCleanupJobConsumer | 292 |
-| ThumbnailServlet | 288 |
-| Content LC unknown state | 89 |
+| Content LC unknown state | 178 |
 
-*Generated 2026-04-20 08:15*
+*Generated 2026-04-21 07:00*
