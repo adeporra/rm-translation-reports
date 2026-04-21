@@ -38,15 +38,15 @@
 
 | Category | Total |
 |----------|-------|
-| ReplicationSquadListener | 422,395 |
-| Language copy not found | 53,963 |
-| ResourceUtils commit | 35,794 |
-| ReplicationNewsAssemblyListener | 14,635 |
-| TranslateHrefAttributes | 8,421 |
-| LockUtil contention | 3,947 |
-| Error executing workflow | 677 |
-| ThumbnailServlet | 422 |
-| TranslationCleanupJobConsumer | 292 |
+| ReplicationSquadListener | 429,932 |
+| Language copy not found | 62,744 |
+| ResourceUtils commit | 35,966 |
+| ReplicationNewsAssemblyListener | 14,956 |
+| TranslateHrefAttributes | 9,265 |
+| LockUtil contention | 4,302 |
+| Error executing workflow | 601 |
+| ThumbnailServlet | 412 |
+| TranslationCleanupJobConsumer | 290 |
 | Content LC unknown state | 178 |
 
-*Generated 2026-04-21 07:00*
+*Generated 2026-04-21 07:03*
