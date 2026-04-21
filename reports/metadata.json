@@ -38,7 +38,7 @@
       "ThumbnailServlet": 134,
       "TicketAssemblyTranslationServiceImpl": 4,
       "GCCScriptProcessor": 4,
-      "ReplicationSquadListener": 146966,
+      "ReplicationSquadListener": 147003,
       "ReplicationNewsAssemblyListener": 7311,
       "ResourceUtils commit": 12452,
       "LockUtil contention": 1342,
@@ -84,9 +84,9 @@
       "ReplicationCamerasListener": 137304
     },
     "2026-04-20": {
-      "PublishLiveSummaryTranslateStep": 137286,
-      "El idioma del CF no es en-us": 176094,
-      "ReplicationCamerasListener": 137304
+      "PublishLiveSummaryTranslateStep": 137322,
+      "El idioma del CF no es en-us": 176145,
+      "ReplicationCamerasListener": 137340
     }
   }
 }
