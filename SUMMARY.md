@@ -1,6 +1,6 @@
 # Translation Jobs Report — PROD Author
 
-*4 day(s): 2026-04-18, 2026-04-19, 2026-04-20, 2026-04-21*
+*5 day(s): 2026-04-18, 2026-04-19, 2026-04-20, 2026-04-21, 2026-04-22*
 
 [**View full dashboard →**](https://adeporra.github.io/rm-translation-reports/)
 
@@ -8,17 +8,17 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Jobs** | 291 |
-| **Approved** | 279 |
+| **Total Jobs** | 367 |
+| **Approved** | 344 |
 | **Errors** | 0 |
-| **Stuck** | 8 |
-| **Unknown** | 4 |
+| **Stuck** | 16 |
+| **Unknown** | 7 |
 | **Retried & Recovered** | 1 |
-| **Avg Duration** | 8.6s |
-| **Min / Max** | 2.0s / 1m 21.1s |
-| **API Requests** | 1,984 |
-| **Total Tokens** | 4,237,378 |
-| **Prompt / Completion** | 3,427,945 / 809,433 |
+| **Avg Duration** | 8.5s |
+| **Min / Max** | 1.8s / 1m 21.1s |
+| **API Requests** | 2,386 |
+| **Total Tokens** | 5,036,400 |
+| **Prompt / Completion** | 4,094,279 / 942,121 |
 
 ## Per-day breakdown
 
@@ -28,6 +28,7 @@
 | 2026-04-19 | 54 | 54 | 0 | 0 | 0 | 0 | 938,064 |
 | 2026-04-20 | 84 | 83 | 0 | 0 | 1 | 1 | 1,547,155 |
 | 2026-04-21 | 101 | 99 | 0 | 1 | 1 | 0 | 1,274,129 |
+| 2026-04-22 | 76 | 65 | 0 | 8 | 3 | 0 | 799,022 |
 
 ## Retry detection
 
@@ -39,15 +40,15 @@
 
 | Category | Total |
 |----------|-------|
-| ReplicationSquadListener | 622,880 |
-| Language copy not found | 363,017 |
-| ResourceUtils commit | 58,038 |
-| ReplicationNewsAssemblyListener | 17,633 |
-| TranslateHrefAttributes | 12,948 |
-| LockUtil contention | 6,122 |
-| Error executing workflow | 1,450 |
-| ThumbnailServlet | 556 |
-| TranslationCleanupJobConsumer | 292 |
+| ReplicationSquadListener | 808,684 |
+| Language copy not found | 654,586 |
+| ResourceUtils commit | 79,948 |
+| ReplicationNewsAssemblyListener | 17,705 |
+| TranslateHrefAttributes | 15,793 |
+| LockUtil contention | 7,737 |
+| Error executing workflow | 2,305 |
+| ThumbnailServlet | 566 |
+| TranslationCleanupJobConsumer | 294 |
 | Content LC unknown state | 178 |
 
-*Generated 2026-04-22 07:55*
+*Generated 2026-04-23 08:01*
