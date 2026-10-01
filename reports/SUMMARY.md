@@ -1,6 +1,6 @@
 # Translation Jobs Report — PROD Author
 
-*5 day(s): 2026-05-02, 2026-05-03, 2026-05-04, 2026-09-28, 2026-09-29*
+*6 day(s): 2026-05-02, 2026-05-03, 2026-05-04, 2026-09-28, 2026-09-29, 2026-09-30*
 
 [**View full dashboard →**](https://adeporra.github.io/rm-translation-reports/)
 
@@ -8,17 +8,17 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Jobs** | 500 |
-| **Approved** | 418 |
+| **Total Jobs** | 560 |
+| **Approved** | 475 |
 | **Errors** | 0 |
-| **Stuck** | 82 |
+| **Stuck** | 85 |
 | **Unknown** | 0 |
 | **Retried & Recovered** | 49 |
-| **Avg Duration** | 10.4s |
-| **Min / Max** | 2.2s / 2m 34.5s |
-| **API Requests** | 3,400 |
-| **Total Tokens** | 7,701,748 |
-| **Prompt / Completion** | 6,074,585 / 1,627,163 |
+| **Avg Duration** | 10.0s |
+| **Min / Max** | 2.0s / 2m 34.5s |
+| **API Requests** | 3,726 |
+| **Total Tokens** | 8,319,479 |
+| **Prompt / Completion** | 6,597,512 / 1,721,967 |
 
 ## Per-day breakdown
 
@@ -29,6 +29,7 @@
 | 2026-05-04 | 69 | 69 | 0 | 0 | 0 | 0 | 940,098 |
 | 2026-09-28 | 74 | 74 | 0 | 0 | 0 | 0 | 1,335,631 |
 | 2026-09-29 | 149 | 67 | 0 | 82 | 0 | 49 | 1,239,161 |
+| 2026-09-30 | 60 | 57 | 0 | 3 | 0 | 0 | 617,731 |
 
 ## Retry detection
 
@@ -88,15 +89,15 @@
 
 | Category | Total |
 |----------|-------|
-| Language copy not found | 770,501 |
-| ReplicationSquadListener | 549,406 |
-| ReplicationNewsAssemblyListener | 196,769 |
-| ResourceUtils commit | 64,068 |
-| TranslateHrefAttributes | 28,909 |
-| LockUtil contention | 10,504 |
-| Error executing workflow | 3,107 |
-| ThumbnailServlet | 2,295 |
-| TranslationCleanupJobConsumer | 793 |
-| TicketAssemblyTranslationServiceImpl | 444 |
+| Language copy not found | 779,394 |
+| ReplicationSquadListener | 669,768 |
+| ReplicationNewsAssemblyListener | 241,717 |
+| ResourceUtils commit | 66,180 |
+| TranslateHrefAttributes | 35,135 |
+| LockUtil contention | 12,334 |
+| ThumbnailServlet | 3,182 |
+| Error executing workflow | 3,134 |
+| TranslationCleanupJobConsumer | 917 |
+| TicketAssemblyTranslationServiceImpl | 606 |
 
-*Generated 2026-10-01 07:52*
+*Generated 2026-10-01 07:57*
