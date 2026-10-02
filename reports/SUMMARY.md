@@ -1,6 +1,6 @@
 # Translation Jobs Report — PROD Author
 
-*6 day(s): 2026-05-02, 2026-05-03, 2026-05-04, 2026-09-28, 2026-09-29, 2026-09-30*
+*7 day(s): 2026-05-02, 2026-05-03, 2026-05-04, 2026-09-28, 2026-09-29, 2026-09-30, 2026-10-01*
 
 [**View full dashboard →**](https://adeporra.github.io/rm-translation-reports/)
 
@@ -8,17 +8,17 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Jobs** | 560 |
-| **Approved** | 475 |
+| **Total Jobs** | 665 |
+| **Approved** | 578 |
 | **Errors** | 0 |
 | **Stuck** | 85 |
-| **Unknown** | 0 |
+| **Unknown** | 2 |
 | **Retried & Recovered** | 49 |
-| **Avg Duration** | 10.0s |
+| **Avg Duration** | 10.1s |
 | **Min / Max** | 2.0s / 2m 34.5s |
-| **API Requests** | 3,726 |
-| **Total Tokens** | 8,319,479 |
-| **Prompt / Completion** | 6,597,512 / 1,721,967 |
+| **API Requests** | 4,818 |
+| **Total Tokens** | 10,339,890 |
+| **Prompt / Completion** | 8,331,064 / 2,008,826 |
 
 ## Per-day breakdown
 
@@ -30,6 +30,7 @@
 | 2026-09-28 | 74 | 74 | 0 | 0 | 0 | 0 | 1,335,631 |
 | 2026-09-29 | 149 | 67 | 0 | 82 | 0 | 49 | 1,239,161 |
 | 2026-09-30 | 60 | 57 | 0 | 3 | 0 | 0 | 617,731 |
+| 2026-10-01 | 105 | 103 | 0 | 0 | 2 | 0 | 2,020,411 |
 
 ## Retry detection
 
@@ -89,15 +90,15 @@
 
 | Category | Total |
 |----------|-------|
-| Language copy not found | 779,394 |
-| ReplicationSquadListener | 669,768 |
-| ReplicationNewsAssemblyListener | 241,717 |
-| ResourceUtils commit | 66,180 |
-| TranslateHrefAttributes | 35,135 |
-| LockUtil contention | 12,334 |
-| ThumbnailServlet | 3,182 |
-| Error executing workflow | 3,134 |
-| TranslationCleanupJobConsumer | 917 |
-| TicketAssemblyTranslationServiceImpl | 606 |
+| Language copy not found | 797,333 |
+| ReplicationSquadListener | 774,639 |
+| ReplicationNewsAssemblyListener | 265,209 |
+| ResourceUtils commit | 68,748 |
+| TranslateHrefAttributes | 41,230 |
+| LockUtil contention | 14,300 |
+| ThumbnailServlet | 3,777 |
+| Error executing workflow | 3,330 |
+| TranslationCleanupJobConsumer | 1,137 |
+| TicketAssemblyTranslationServiceImpl | 786 |
 
-*Generated 2026-10-01 07:57*
+*Generated 2026-10-02 11:25*
