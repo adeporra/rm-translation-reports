@@ -1,6 +1,6 @@
 # Translation Jobs Report — PROD Author
 
-*3 day(s): 2026-10-03, 2026-10-04, 2026-10-06*
+*4 day(s): 2026-10-03, 2026-10-04, 2026-10-06, 2026-10-07*
 
 [**View full dashboard →**](https://adeporra.github.io/rm-translation-reports/)
 
@@ -8,17 +8,17 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Jobs** | 258 |
-| **Approved** | 256 |
+| **Total Jobs** | 324 |
+| **Approved** | 318 |
 | **Errors** | 0 |
-| **Stuck** | 0 |
+| **Stuck** | 4 |
 | **Unknown** | 2 |
-| **Retried & Recovered** | 0 |
-| **Avg Duration** | 5.8s |
-| **Min / Max** | 1.9s / 31.7s |
-| **API Requests** | 1,607 |
-| **Total Tokens** | 3,372,785 |
-| **Prompt / Completion** | 2,744,494 / 628,291 |
+| **Retried & Recovered** | 1 |
+| **Avg Duration** | 6.7s |
+| **Min / Max** | 1.7s / 44.7s |
+| **API Requests** | 2,013 |
+| **Total Tokens** | 4,274,743 |
+| **Prompt / Completion** | 3,460,146 / 814,597 |
 
 ## Per-day breakdown
 
@@ -27,20 +27,27 @@
 | 2026-10-03 | 96 | 96 | 0 | 0 | 0 | 0 | 1,529,804 |
 | 2026-10-04 | 73 | 72 | 0 | 0 | 1 | 0 | 1,070,800 |
 | 2026-10-06 | 89 | 88 | 0 | 0 | 1 | 0 | 772,181 |
+| 2026-10-07 | 66 | 62 | 0 | 4 | 0 | 1 | 901,958 |
+
+## Retry detection
+
+| Date | # | Job ID | Project | Language | Detail | Status |
+|------|---|--------|---------|----------|--------|--------|
+| 2026-10-07 | 35 | `translationjob2207` | Nathalie Ai Translation Project | JA-JP | API call failed (api_payload_dump) → retried → APPROVED | APPROVED |
 
 ## Top error categories
 
 | Category | Total |
 |----------|-------|
-| ReplicationSquadListener | 384,636 |
-| ReplicationNewsAssemblyListener | 186,614 |
-| TranslateHrefAttributes | 48,117 |
-| Language copy not found | 17,087 |
-| LockUtil contention | 7,583 |
-| ThumbnailServlet | 2,863 |
-| Error executing workflow | 693 |
-| TranslationCleanupJobConsumer | 505 |
-| GCCScriptProcessor | 495 |
-| TicketAssemblyTranslationServiceImpl | 437 |
+| ReplicationSquadListener | 468,892 |
+| ReplicationNewsAssemblyListener | 202,716 |
+| TranslateHrefAttributes | 56,315 |
+| Language copy not found | 18,020 |
+| LockUtil contention | 9,349 |
+| ThumbnailServlet | 4,202 |
+| ResourceUtils commit | 2,331 |
+| Error executing workflow | 785 |
+| GCCScriptProcessor | 662 |
+| TranslationCleanupJobConsumer | 637 |
 
-*Generated 2026-10-07 12:07*
+*Generated 2026-10-08 12:17*
