@@ -1,6 +1,6 @@
 # Translation Jobs Report — PROD Author
 
-*5 day(s): 2026-10-24, 2026-10-25, 2026-10-26, 2026-10-27, 2026-10-28*
+*6 day(s): 2026-10-24, 2026-10-25, 2026-10-26, 2026-10-27, 2026-10-28, 2026-10-29*
 
 [**View full dashboard →**](https://adeporra.github.io/rm-translation-reports/)
 
@@ -8,27 +8,28 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Jobs** | 373 |
-| **Approved** | 363 |
+| **Total Jobs** | 425 |
+| **Approved** | 414 |
 | **Errors** | 0 |
-| **Stuck** | 4 |
+| **Stuck** | 5 |
 | **Unknown** | 6 |
 | **Retried & Recovered** | 2 |
-| **Avg Duration** | 10.1s |
+| **Avg Duration** | 9.8s |
 | **Min / Max** | 2.0s / 1m 58.9s |
-| **API Requests** | 2,349 |
-| **Total Tokens** | 5,291,507 |
-| **Prompt / Completion** | 4,182,955 / 1,108,552 |
+| **API Requests** | 2,654 |
+| **Total Tokens** | 5,955,791 |
+| **Prompt / Completion** | 4,714,697 / 1,241,094 |
 
 ## Per-day breakdown
 
 | Date | Jobs | Approved | Errors | Stuck | Unknown | Retried | Total Tokens |
 |------|------|---------|--------|-------|--------|---------|-------------|
-| 2026-10-24 | 39 | 33 | 0 | 2 | 4 | 0 | 192,773 |
+| 2026-10-24 | 36 | 33 | 0 | 2 | 1 | 0 | 185,408 |
 | 2026-10-25 | 110 | 109 | 0 | 0 | 1 | 0 | 1,929,926 |
 | 2026-10-26 | 59 | 59 | 0 | 0 | 0 | 0 | 709,192 |
 | 2026-10-27 | 90 | 89 | 0 | 1 | 0 | 1 | 1,327,093 |
 | 2026-10-28 | 75 | 73 | 0 | 1 | 1 | 1 | 1,132,523 |
+| 2026-10-29 | 55 | 51 | 0 | 1 | 3 | 0 | 671,649 |
 
 ## Retry detection
 
@@ -41,15 +42,15 @@
 
 | Category | Total |
 |----------|-------|
-| ReplicationSquadListener | 652,493 |
-| ReplicationNewsAssemblyListener | 296,259 |
-| Language copy not found | 164,545 |
-| TranslateHrefAttributes | 24,885 |
-| Error executing workflow | 10,527 |
-| LockUtil contention | 7,259 |
-| ThumbnailServlet | 6,818 |
-| ResourceUtils commit | 2,338 |
-| GCCScriptProcessor | 934 |
-| TicketAssemblyTranslationServiceImpl | 840 |
+| ReplicationSquadListener | 791,083 |
+| ReplicationNewsAssemblyListener | 353,290 |
+| Language copy not found | 186,018 |
+| TranslateHrefAttributes | 28,881 |
+| Error executing workflow | 10,662 |
+| ThumbnailServlet | 9,126 |
+| LockUtil contention | 8,595 |
+| ResourceUtils commit | 2,583 |
+| GCCScriptProcessor | 1,113 |
+| TranslationCleanupJobConsumer | 1,043 |
 
-*Generated 2026-10-29 12:23*
+*Generated 2026-10-30 12:13*
