@@ -1,6 +1,6 @@
 # Translation Jobs Report — PROD Author
 
-*2 day(s): 2026-10-31, 2026-11-01*
+*3 day(s): 2026-10-31, 2026-11-01, 2026-11-02*
 
 [**View full dashboard →**](https://adeporra.github.io/rm-translation-reports/)
 
@@ -8,17 +8,17 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Jobs** | 216 |
-| **Approved** | 215 |
+| **Total Jobs** | 258 |
+| **Approved** | 257 |
 | **Errors** | 0 |
 | **Stuck** | 1 |
 | **Unknown** | 0 |
 | **Retried & Recovered** | 0 |
-| **Avg Duration** | 8.9s |
+| **Avg Duration** | 8.4s |
 | **Min / Max** | 2.1s / 1m 2.4s |
-| **API Requests** | 1,944 |
-| **Total Tokens** | 4,000,248 |
-| **Prompt / Completion** | 3,276,090 / 724,158 |
+| **API Requests** | 2,214 |
+| **Total Tokens** | 4,472,259 |
+| **Prompt / Completion** | 3,691,026 / 781,233 |
 
 ## Per-day breakdown
 
@@ -26,20 +26,21 @@
 |------|------|---------|--------|-------|--------|---------|-------------|
 | 2026-10-31 | 84 | 83 | 0 | 1 | 0 | 0 | 1,550,388 |
 | 2026-11-01 | 132 | 132 | 0 | 0 | 0 | 0 | 2,449,860 |
+| 2026-11-02 | 42 | 42 | 0 | 0 | 0 | 0 | 472,011 |
 
 ## Top error categories
 
 | Category | Total |
 |----------|-------|
-| ReplicationSquadListener | 275,217 |
-| ReplicationNewsAssemblyListener | 242,291 |
-| Language copy not found | 49,486 |
-| TranslateHrefAttributes | 13,722 |
-| LockUtil contention | 4,518 |
-| Error executing workflow | 1,857 |
-| ResourceUtils commit | 1,502 |
-| ThumbnailServlet | 1,465 |
-| TranslationCleanupJobConsumer | 390 |
-| GCCScriptProcessor | 372 |
+| ReplicationSquadListener | 415,624 |
+| ReplicationNewsAssemblyListener | 375,604 |
+| Language copy not found | 96,027 |
+| TranslateHrefAttributes | 19,484 |
+| LockUtil contention | 6,547 |
+| ResourceUtils commit | 2,906 |
+| ThumbnailServlet | 2,346 |
+| Error executing workflow | 2,341 |
+| GCCScriptProcessor | 621 |
+| TicketAssemblyTranslationServiceImpl | 602 |
 
-*Generated 2026-11-02 14:52*
+*Generated 2026-11-03 13:41*
