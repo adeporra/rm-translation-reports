@@ -1,6 +1,6 @@
 # Translation Jobs Report — PROD Author
 
-*5 day(s): 2026-10-31, 2026-11-01, 2026-11-02, 2026-11-03, 2026-11-04*
+*6 day(s): 2026-10-31, 2026-11-01, 2026-11-02, 2026-11-03, 2026-11-04, 2026-11-05*
 
 [**View full dashboard →**](https://adeporra.github.io/rm-translation-reports/)
 
@@ -8,17 +8,17 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Jobs** | 533 |
-| **Approved** | 524 |
+| **Total Jobs** | 584 |
+| **Approved** | 575 |
 | **Errors** | 0 |
 | **Stuck** | 5 |
 | **Unknown** | 4 |
 | **Retried & Recovered** | 4 |
-| **Avg Duration** | 13.5s |
+| **Avg Duration** | 13.1s |
 | **Min / Max** | 2.1s / 20m 53.6s |
-| **API Requests** | 4,177 |
-| **Total Tokens** | 8,897,760 |
-| **Prompt / Completion** | 7,189,899 / 1,707,861 |
+| **API Requests** | 4,570 |
+| **Total Tokens** | 9,622,562 |
+| **Prompt / Completion** | 7,814,644 / 1,807,918 |
 
 ## Per-day breakdown
 
@@ -28,7 +28,8 @@
 | 2026-11-01 | 132 | 132 | 0 | 0 | 0 | 0 | 2,449,860 |
 | 2026-11-02 | 42 | 42 | 0 | 0 | 0 | 0 | 472,011 |
 | 2026-11-03 | 108 | 108 | 0 | 0 | 0 | 1 | 1,736,484 |
-| 2026-11-04 | 167 | 159 | 0 | 4 | 4 | 3 | 2,689,017 |
+| 2026-11-04 | 165 | 159 | 0 | 4 | 2 | 3 | 2,664,441 |
+| 2026-11-05 | 53 | 51 | 0 | 0 | 2 | 0 | 749,378 |
 
 ## Retry detection
 
@@ -43,15 +44,15 @@
 
 | Category | Total |
 |----------|-------|
-| ReplicationSquadListener | 704,895 |
-| ReplicationNewsAssemblyListener | 607,018 |
-| Language copy not found | 139,825 |
-| TranslateHrefAttributes | 36,108 |
-| LockUtil contention | 12,204 |
-| ThumbnailServlet | 4,597 |
-| ResourceUtils commit | 4,214 |
-| Error executing workflow | 3,179 |
-| GCCScriptProcessor | 1,166 |
-| TicketAssemblyTranslationServiceImpl | 1,009 |
+| ReplicationSquadListener | 851,189 |
+| ReplicationNewsAssemblyListener | 657,897 |
+| Language copy not found | 179,495 |
+| TranslateHrefAttributes | 44,217 |
+| LockUtil contention | 15,403 |
+| ThumbnailServlet | 5,661 |
+| ResourceUtils commit | 5,498 |
+| Error executing workflow | 3,438 |
+| GCCScriptProcessor | 1,355 |
+| TranslationCleanupJobConsumer | 1,186 |
 
-*Generated 2026-11-05 14:04*
+*Generated 2026-11-06 13:48*
