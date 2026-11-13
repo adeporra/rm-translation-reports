@@ -1,6 +1,6 @@
 # Translation Jobs Report — PROD Author
 
-*5 day(s): 2026-11-07, 2026-11-08, 2026-11-09, 2026-11-10, 2026-11-11*
+*6 day(s): 2026-11-07, 2026-11-08, 2026-11-09, 2026-11-10, 2026-11-11, 2026-11-12*
 
 [**View full dashboard →**](https://adeporra.github.io/rm-translation-reports/)
 
@@ -8,17 +8,17 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Jobs** | 258 |
-| **Approved** | 253 |
+| **Total Jobs** | 307 |
+| **Approved** | 302 |
 | **Errors** | 0 |
 | **Stuck** | 1 |
 | **Unknown** | 4 |
-| **Retried & Recovered** | 2 |
+| **Retried & Recovered** | 3 |
 | **Avg Duration** | 12.1s |
 | **Min / Max** | 2.2s / 3m 9.6s |
-| **API Requests** | 1,609 |
-| **Total Tokens** | 3,435,560 |
-| **Prompt / Completion** | 2,776,924 / 658,636 |
+| **API Requests** | 1,895 |
+| **Total Tokens** | 4,060,922 |
+| **Prompt / Completion** | 3,278,023 / 782,899 |
 
 ## Per-day breakdown
 
@@ -28,7 +28,8 @@
 | 2026-11-08 | 56 | 56 | 0 | 0 | 0 | 0 | 1,062,612 |
 | 2026-11-09 | 49 | 49 | 0 | 0 | 0 | 0 | 672,428 |
 | 2026-11-10 | 77 | 76 | 0 | 0 | 1 | 0 | 1,076,378 |
-| 2026-11-11 | 55 | 51 | 0 | 1 | 3 | 2 | 557,546 |
+| 2026-11-11 | 53 | 51 | 0 | 1 | 1 | 2 | 534,722 |
+| 2026-11-12 | 51 | 49 | 0 | 0 | 2 | 1 | 648,186 |
 
 ## Retry detection
 
@@ -36,20 +37,21 @@
 |------|---|--------|---------|----------|--------|--------|
 | 2026-11-11 | 11 | `translationjob2579` | Nathalie Ai Translation Project | EN-US | API call failed (api_payload_dump) | IN_PROGRESS |
 | 2026-11-11 | 35 | `translationjob2587` | Nathalie Ai Translation Project | EN-US | API call failed (api_payload_dump) → retried → APPROVED | APPROVED |
+| 2026-11-12 | 18 | `translationjob2842` | Ignacio Ai Translation Project | JA-JP | API call failed (api_payload_dump) → retried → APPROVED | APPROVED |
 
 ## Top error categories
 
 | Category | Total |
 |----------|-------|
-| ReplicationSquadListener | 740,004 |
-| ReplicationNewsAssemblyListener | 487,336 |
-| Language copy not found | 225,534 |
-| TranslateHrefAttributes | 50,339 |
-| LockUtil contention | 19,069 |
-| ResourceUtils commit | 5,096 |
-| Error executing workflow | 4,290 |
-| ThumbnailServlet | 3,997 |
-| GCCScriptProcessor | 981 |
-| TranslationCleanupJobConsumer | 902 |
+| ReplicationSquadListener | 894,335 |
+| ReplicationNewsAssemblyListener | 512,189 |
+| Language copy not found | 240,212 |
+| TranslateHrefAttributes | 61,405 |
+| LockUtil contention | 22,573 |
+| ThumbnailServlet | 5,295 |
+| ResourceUtils commit | 5,260 |
+| Error executing workflow | 4,706 |
+| TranslationCleanupJobConsumer | 1,158 |
+| GCCScriptProcessor | 1,151 |
 
-*Generated 2026-11-12 14:43*
+*Generated 2026-11-13 13:59*
