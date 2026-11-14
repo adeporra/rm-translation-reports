@@ -1,6 +1,6 @@
 # Translation Jobs Report — PROD Author
 
-*6 day(s): 2026-11-07, 2026-11-08, 2026-11-09, 2026-11-10, 2026-11-11, 2026-11-12*
+*7 day(s): 2026-11-07, 2026-11-08, 2026-11-09, 2026-11-10, 2026-11-11, 2026-11-12, 2026-11-13*
 
 [**View full dashboard →**](https://adeporra.github.io/rm-translation-reports/)
 
@@ -8,17 +8,17 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Jobs** | 307 |
-| **Approved** | 302 |
+| **Total Jobs** | 348 |
+| **Approved** | 343 |
 | **Errors** | 0 |
 | **Stuck** | 1 |
 | **Unknown** | 4 |
 | **Retried & Recovered** | 3 |
-| **Avg Duration** | 12.1s |
+| **Avg Duration** | 11.6s |
 | **Min / Max** | 2.2s / 3m 9.6s |
-| **API Requests** | 1,895 |
-| **Total Tokens** | 4,060,922 |
-| **Prompt / Completion** | 3,278,023 / 782,899 |
+| **API Requests** | 2,098 |
+| **Total Tokens** | 4,609,578 |
+| **Prompt / Completion** | 3,684,198 / 925,380 |
 
 ## Per-day breakdown
 
@@ -29,7 +29,8 @@
 | 2026-11-09 | 49 | 49 | 0 | 0 | 0 | 0 | 672,428 |
 | 2026-11-10 | 77 | 76 | 0 | 0 | 1 | 0 | 1,076,378 |
 | 2026-11-11 | 53 | 51 | 0 | 1 | 1 | 2 | 534,722 |
-| 2026-11-12 | 51 | 49 | 0 | 0 | 2 | 1 | 648,186 |
+| 2026-11-12 | 49 | 49 | 0 | 0 | 0 | 1 | 631,838 |
+| 2026-11-13 | 43 | 41 | 0 | 0 | 2 | 0 | 565,004 |
 
 ## Retry detection
 
@@ -43,15 +44,15 @@
 
 | Category | Total |
 |----------|-------|
-| ReplicationSquadListener | 894,335 |
-| ReplicationNewsAssemblyListener | 512,189 |
-| Language copy not found | 240,212 |
-| TranslateHrefAttributes | 61,405 |
-| LockUtil contention | 22,573 |
-| ThumbnailServlet | 5,295 |
-| ResourceUtils commit | 5,260 |
-| Error executing workflow | 4,706 |
-| TranslationCleanupJobConsumer | 1,158 |
-| GCCScriptProcessor | 1,151 |
+| ReplicationSquadListener | 1,047,599 |
+| ReplicationNewsAssemblyListener | 536,765 |
+| Language copy not found | 254,535 |
+| TranslateHrefAttributes | 79,501 |
+| LockUtil contention | 28,395 |
+| ThumbnailServlet | 6,593 |
+| ResourceUtils commit | 5,424 |
+| Error executing workflow | 5,014 |
+| TranslationCleanupJobConsumer | 1,412 |
+| GCCScriptProcessor | 1,331 |
 
-*Generated 2026-11-13 13:59*
+*Generated 2026-11-14 13:01*
