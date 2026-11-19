@@ -1,6 +1,6 @@
 # Translation Jobs Report — PROD Author
 
-*4 day(s): 2026-11-14, 2026-11-15, 2026-11-16, 2026-11-17*
+*5 day(s): 2026-11-14, 2026-11-15, 2026-11-16, 2026-11-17, 2026-11-18*
 
 [**View full dashboard →**](https://adeporra.github.io/rm-translation-reports/)
 
@@ -8,17 +8,17 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Jobs** | 236 |
-| **Approved** | 229 |
+| **Total Jobs** | 371 |
+| **Approved** | 364 |
 | **Errors** | 0 |
 | **Stuck** | 4 |
 | **Unknown** | 3 |
 | **Retried & Recovered** | 6 |
-| **Avg Duration** | 10.0s |
-| **Min / Max** | 2.5s / 1m 5.5s |
-| **API Requests** | 1,447 |
-| **Total Tokens** | 3,287,879 |
-| **Prompt / Completion** | 2,592,861 / 695,018 |
+| **Avg Duration** | 9.6s |
+| **Min / Max** | 2.0s / 1m 5.5s |
+| **API Requests** | 2,330 |
+| **Total Tokens** | 5,081,116 |
+| **Prompt / Completion** | 4,071,722 / 1,009,394 |
 
 ## Per-day breakdown
 
@@ -26,8 +26,9 @@
 |------|------|---------|--------|-------|--------|---------|-------------|
 | 2026-11-14 | 35 | 35 | 0 | 0 | 0 | 0 | 659,065 |
 | 2026-11-15 | 23 | 21 | 0 | 0 | 2 | 0 | 134,163 |
-| 2026-11-16 | 62 | 57 | 0 | 4 | 1 | 4 | 732,576 |
+| 2026-11-16 | 61 | 57 | 0 | 4 | 0 | 4 | 722,725 |
 | 2026-11-17 | 116 | 116 | 0 | 0 | 0 | 2 | 1,762,075 |
+| 2026-11-18 | 136 | 135 | 0 | 0 | 1 | 0 | 1,803,088 |
 
 ## Retry detection
 
@@ -44,15 +45,15 @@
 
 | Category | Total |
 |----------|-------|
-| ReplicationSquadListener | 646,047 |
-| ReplicationNewsAssemblyListener | 375,761 |
-| Language copy not found | 126,333 |
-| TranslateHrefAttributes | 61,290 |
-| LockUtil contention | 18,463 |
-| ResourceUtils commit | 4,994 |
-| ThumbnailServlet | 4,656 |
-| Error executing workflow | 4,238 |
-| GCCScriptProcessor | 747 |
-| TicketAssemblyTranslationServiceImpl | 720 |
+| ReplicationSquadListener | 817,359 |
+| ReplicationNewsAssemblyListener | 482,048 |
+| Language copy not found | 186,687 |
+| TranslateHrefAttributes | 68,248 |
+| LockUtil contention | 20,947 |
+| ResourceUtils commit | 7,434 |
+| ThumbnailServlet | 5,614 |
+| Error executing workflow | 4,932 |
+| TicketAssemblyTranslationServiceImpl | 1,000 |
+| GCCScriptProcessor | 971 |
 
-*Generated 2026-11-18 15:11*
+*Generated 2026-11-19 15:19*
