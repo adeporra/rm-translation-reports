@@ -1,6 +1,6 @@
 # Translation Jobs Report — PROD Author
 
-*6 day(s): 2026-11-14, 2026-11-15, 2026-11-16, 2026-11-17, 2026-11-18, 2026-11-19*
+*7 day(s): 2026-11-14, 2026-11-15, 2026-11-16, 2026-11-17, 2026-11-18, 2026-11-19, 2026-11-20*
 
 [**View full dashboard →**](https://adeporra.github.io/rm-translation-reports/)
 
@@ -8,17 +8,17 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Jobs** | 418 |
-| **Approved** | 411 |
+| **Total Jobs** | 522 |
+| **Approved** | 514 |
 | **Errors** | 0 |
 | **Stuck** | 4 |
-| **Unknown** | 3 |
+| **Unknown** | 4 |
 | **Retried & Recovered** | 6 |
-| **Avg Duration** | 9.2s |
+| **Avg Duration** | 9.3s |
 | **Min / Max** | 2.0s / 1m 5.5s |
-| **API Requests** | 2,623 |
-| **Total Tokens** | 5,680,592 |
-| **Prompt / Completion** | 4,563,125 / 1,117,467 |
+| **API Requests** | 3,454 |
+| **Total Tokens** | 7,442,611 |
+| **Prompt / Completion** | 5,988,659 / 1,453,952 |
 
 ## Per-day breakdown
 
@@ -30,6 +30,7 @@
 | 2026-11-17 | 116 | 116 | 0 | 0 | 0 | 2 | 1,762,075 |
 | 2026-11-18 | 135 | 135 | 0 | 0 | 0 | 0 | 1,794,748 |
 | 2026-11-19 | 48 | 47 | 0 | 0 | 1 | 0 | 607,816 |
+| 2026-11-20 | 104 | 103 | 0 | 0 | 1 | 0 | 1,762,019 |
 
 ## Retry detection
 
@@ -46,15 +47,15 @@
 
 | Category | Total |
 |----------|-------|
-| ReplicationSquadListener | 963,023 |
-| ReplicationNewsAssemblyListener | 602,482 |
-| Language copy not found | 246,628 |
-| TranslateHrefAttributes | 73,644 |
-| LockUtil contention | 22,853 |
-| ResourceUtils commit | 9,828 |
-| ThumbnailServlet | 6,535 |
-| Error executing workflow | 5,249 |
-| TicketAssemblyTranslationServiceImpl | 1,280 |
-| GCCScriptProcessor | 1,198 |
+| ReplicationSquadListener | 1,107,657 |
+| ReplicationNewsAssemblyListener | 746,663 |
+| Language copy not found | 267,389 |
+| TranslateHrefAttributes | 78,806 |
+| LockUtil contention | 24,602 |
+| ResourceUtils commit | 10,337 |
+| ThumbnailServlet | 7,446 |
+| Error executing workflow | 5,415 |
+| TicketAssemblyTranslationServiceImpl | 1,474 |
+| GCCScriptProcessor | 1,390 |
 
-*Generated 2026-11-20 14:57*
+*Generated 2026-11-21 14:17*
