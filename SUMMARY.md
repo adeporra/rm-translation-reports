@@ -1,6 +1,6 @@
 # Translation Jobs Report — PROD Author
 
-*3 day(s): 2026-11-21, 2026-11-22, 2026-11-23*
+*4 day(s): 2026-11-21, 2026-11-22, 2026-11-23, 2026-11-24*
 
 [**View full dashboard →**](https://adeporra.github.io/rm-translation-reports/)
 
@@ -8,17 +8,17 @@
 
 | Metric | Value |
 |--------|-------|
-| **Total Jobs** | 311 |
-| **Approved** | 302 |
+| **Total Jobs** | 504 |
+| **Approved** | 495 |
 | **Errors** | 0 |
 | **Stuck** | 8 |
 | **Unknown** | 1 |
 | **Retried & Recovered** | 10 |
-| **Avg Duration** | 9.6s |
-| **Min / Max** | 1.6s / 1m 21.0s |
-| **API Requests** | 2,375 |
-| **Total Tokens** | 5,633,830 |
-| **Prompt / Completion** | 4,357,464 / 1,276,366 |
+| **Avg Duration** | 9.7s |
+| **Min / Max** | 1.6s / 1m 32.6s |
+| **API Requests** | 3,703 |
+| **Total Tokens** | 8,578,629 |
+| **Prompt / Completion** | 6,700,487 / 1,878,142 |
 
 ## Per-day breakdown
 
@@ -26,7 +26,8 @@
 |------|------|---------|--------|-------|--------|---------|-------------|
 | 2026-11-21 | 124 | 124 | 0 | 0 | 0 | 0 | 2,738,435 |
 | 2026-11-22 | 72 | 72 | 0 | 0 | 0 | 0 | 1,348,626 |
-| 2026-11-23 | 115 | 106 | 0 | 8 | 1 | 10 | 1,546,769 |
+| 2026-11-23 | 114 | 106 | 0 | 8 | 0 | 10 | 1,530,364 |
+| 2026-11-24 | 194 | 193 | 0 | 0 | 1 | 0 | 2,961,204 |
 
 ## Retry detection
 
@@ -47,15 +48,15 @@
 
 | Category | Total |
 |----------|-------|
-| ReplicationSquadListener | 505,144 |
-| ReplicationNewsAssemblyListener | 464,763 |
-| Language copy not found | 192,963 |
-| TranslateHrefAttributes | 20,216 |
-| ResourceUtils commit | 12,582 |
-| LockUtil contention | 6,320 |
-| Error executing workflow | 6,174 |
-| ThumbnailServlet | 3,028 |
-| TicketAssemblyTranslationServiceImpl | 976 |
-| GCCScriptProcessor | 599 |
+| ReplicationSquadListener | 660,847 |
+| ReplicationNewsAssemblyListener | 600,326 |
+| Language copy not found | 223,520 |
+| TranslateHrefAttributes | 31,518 |
+| ResourceUtils commit | 16,455 |
+| Error executing workflow | 10,082 |
+| LockUtil contention | 9,178 |
+| ThumbnailServlet | 4,566 |
+| TicketAssemblyTranslationServiceImpl | 1,342 |
+| GCCScriptProcessor | 798 |
 
-*Generated 2026-11-24 17:01*
+*Generated 2026-11-25 16:51*
